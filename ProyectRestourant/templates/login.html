@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetroBite | Login</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="home.html" class="logo">RetroBite</a>
+        <ul class="nav-links">
+            <li><a href="home.html" data-i18n="nav_home">Home</a></li>
+            <li><a href="menu.html" data-i18n="nav_menu">Menu</a></li>
+            <li><a href="login.html" data-i18n="nav_login" style="color: var(--secondary-color);">Login</a></li>
+            <li><a href="register.html" data-i18n="nav_register">Register</a></li>
+            <li><a href="my_orders.html" data-i18n="nav_orders">My Orders</a></li>
+            <li><a href="reserved.html" data-i18n="nav_reserved">Reservation</a></li>
+        </ul>
+        <div class="lang-switcher">
+            <button class="lang-btn" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="es">ES</button>
+            <button class="lang-btn" data-lang="ua">UA</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="retro-form animate-reveal">
+            <h2 data-i18n="login_title" style="text-align: center; margin-bottom: 2rem; color: var(--primary-color);">
+                Welcome Back</h2>
+            <form action="#" method="POST">
+                <div class="form-group">
+                    <label for="email" data-i18n="email_label">Email Address</label>
+                    <input type="email" id="email" class="retro-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="password" data-i18n="password_label">Password</label>
+                    <input type="password" id="password" class="retro-input" required>
+                </div>
+                <button type="submit" class="retro-btn" style="width: 100%; margin-top: 1rem;"
+                    data-i18n="login_btn">Login</button>
+            </form>
+            <p style="text-align: center; margin-top: 1.5rem;">
+                Don't have an account? <a href="register.html"
+                    style="color: var(--secondary-color); font-weight: bold;">Register</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="../static/libs/anime.min.js"></script>
+    <script src="../static/js/translate.js"></script>
+    <script src="../static/js/animations.js"></script>
+    <script src="../static/js/main.js"></script>
+</body>
+
+</html>

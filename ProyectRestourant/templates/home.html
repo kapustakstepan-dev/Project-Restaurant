@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetroBite | Home</title>
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="home.html" class="logo">RetroBite</a>
+        <ul class="nav-links">
+            <li><a href="home.html" data-i18n="nav_home">Home</a></li>
+            <li><a href="menu.html" data-i18n="nav_menu">Menu</a></li>
+            <li><a href="login.html" data-i18n="nav_login">Login</a></li>
+            <li><a href="register.html" data-i18n="nav_register">Register</a></li>
+            <li><a href="my_orders.html" data-i18n="nav_orders">My Orders</a></li>
+            <li><a href="reserved.html" data-i18n="nav_reserved">Reservation</a></li>
+        </ul>
+        <div class="lang-switcher">
+            <button class="lang-btn" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="es">ES</button>
+            <button class="lang-btn" data-lang="ua">UA</button>
+        </div>
+    </nav>
+
+    <!-- Main Hero Section -->
+    <main class="container">
+        <div style="text-align: center; margin-top: 10vh; max-width: 800px; margin-left: auto; margin-right: auto;"
+            class="animate-reveal">
+            <h1 data-i18n="hero_title"
+                style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1.5rem; text-shadow: 4px 4px 0px var(--accent-color);">
+                Welcome to RetroBite
+            </h1>
+            <p data-i18n="hero_subtitle"
+                style="font-size: 1.5rem; margin-bottom: 3rem; line-height: 1.6; font-weight: 500;">
+                Taste the nostalgic flavors of the past, served with a modern twist.
+            </p>
+            <a href="menu.html" class="retro-btn" data-i18n="hero_cta"
+                style="font-size: 1.3rem; padding: 1rem 3rem;">View Menu</a>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <!-- Anime.js from local -->
+    <script src="../static/libs/anime.min.js"></script>
+    <script src="../static/js/translate.js"></script>
+    <script src="../static/js/animations.js"></script>
+    <script src="../static/js/main.js"></script>
+</body>
+
+</html>

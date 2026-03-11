@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetroBite | Menu</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <style>
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .menu-img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            background-color: var(--accent-color);
+            border: 3px solid var(--text-color);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--text-color);
+            box-shadow: 4px 4px 0px var(--text-color);
+        }
+
+        .menu-item-info {
+            text-align: center;
+            width: 100%;
+        }
+
+        .menu-price {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            font-family: var(--font-heading);
+            margin: 0.5rem 0;
+        }
+
+        .menu-desc {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+            min-height: 45px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="home.html" class="logo">RetroBite</a>
+        <ul class="nav-links">
+            <li><a href="home.html" data-i18n="nav_home">Home</a></li>
+            <li><a href="menu.html" data-i18n="nav_menu" style="color: var(--secondary-color);">Menu</a></li>
+            <li><a href="login.html" data-i18n="nav_login">Login</a></li>
+            <li><a href="register.html" data-i18n="nav_register">Register</a></li>
+            <li><a href="my_orders.html" data-i18n="nav_orders">My Orders</a></li>
+            <li><a href="reserved.html" data-i18n="nav_reserved">Reservation</a></li>
+        </ul>
+        <div class="lang-switcher">
+            <button class="lang-btn" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="es">ES</button>
+            <button class="lang-btn" data-lang="ua">UA</button>
+        </div>
+    </nav>
+
+    <main class="container animate-reveal">
+        <h1 data-i18n="menu_title"
+            style="text-align: center; font-size: 3rem; text-shadow: 3px 3px 0px var(--accent-color);">Food From The
+            Past</h1>
+
+        <div class="menu-grid">
+            <!-- Item 1 -->
+            <div class="retro-card" onclick="window.location.href='position.html?id=1'" style="cursor: pointer;">
+                <!-- Placeholder Image via placehold.co -->
+                <img src="https://placehold.co/400x300/ffd166/1a1a1a?text=Burger\nIcon&font=Righteous"
+                    alt="Retro Burger" class="menu-img">
+                <div class="menu-item-info">
+                    <h3>Retro Burger</h3>
+                    <p class="menu-desc" data-i18n="desc_burger">Classic double patty with melted cheese, lettuce, and
+                        secret diner sauce.</p>
+                    <div class="menu-price">$12.99</div>
+                    <button class="retro-btn trigger-order" data-item="Retro Burger" data-price="12.99"
+                        data-i18n="add_to_cart" onclick="event.stopPropagation();">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="retro-card" onclick="window.location.href='position.html?id=2'" style="cursor: pointer;">
+                <img src="https://placehold.co/400x300/ff6b6b/1a1a1a?text=Fries\nIcon&font=Righteous" alt="Diner Fries"
+                    class="menu-img">
+                <div class="menu-item-info">
+                    <h3>Classic Diner Fries</h3>
+                    <p class="menu-desc" data-i18n="desc_fries">Crispy crinkle-cut fries seasoned with our special retro
+                        spice blend.</p>
+                    <div class="menu-price">$4.99</div>
+                    <button class="retro-btn trigger-order" data-item="Classic Diner Fries" data-price="4.99"
+                        data-i18n="add_to_cart" onclick="event.stopPropagation();">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="retro-card" onclick="window.location.href='position.html?id=3'" style="cursor: pointer;">
+                <img src="https://placehold.co/400x300/4ecdc4/1a1a1a?text=Milkshake\nIcon&font=Righteous"
+                    alt="Vintage Milkshake" class="menu-img">
+                <div class="menu-item-info">
+                    <h3>Vintage Milkshake</h3>
+                    <p class="menu-desc" data-i18n="desc_milkshake">Thick vanilla strawberry shake topped with whipped
+                        cream and a cherry.</p>
+                    <div class="menu-price">$6.50</div>
+                    <button class="retro-btn trigger-order" data-item="Vintage Milkshake" data-price="6.50"
+                        data-i18n="add_to_cart" onclick="event.stopPropagation();">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="retro-card" onclick="window.location.href='position.html?id=4'" style="cursor: pointer;">
+                <img src="https://placehold.co/400x300/ffd166/1a1a1a?text=Pancakes\nIcon&font=Righteous"
+                    alt="Grandma Pancakes" class="menu-img">
+                <div class="menu-item-info">
+                    <h3>Grandma Pancakes</h3>
+                    <p class="menu-desc" data-i18n="desc_pancakes">Fluffy buttermilk stack with melting butter and maple
+                        syrup.</p>
+                    <div class="menu-price">$8.99</div>
+                    <button class="retro-btn trigger-order" data-item="Grandma Pancakes" data-price="8.99"
+                        data-i18n="add_to_cart" onclick="event.stopPropagation();">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="retro-card" onclick="window.location.href='position.html?id=5'" style="cursor: pointer;">
+                <img src="https://placehold.co/400x300/ff6b6b/1a1a1a?text=Pizza\nIcon&font=Righteous"
+                    alt="Old School Pizza" class="menu-img">
+                <div class="menu-item-info">
+                    <h3>Old School Pizza</h3>
+                    <p class="menu-desc" data-i18n="desc_pizza">Cheesy pepperoni slice baked in our classic brick oven.
+                    </p>
+                    <div class="menu-price">$14.99</div>
+                    <button class="retro-btn trigger-order" data-item="Old School Pizza" data-price="14.99"
+                        data-i18n="add_to_cart" onclick="event.stopPropagation();">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Item 6 -->
+            <div class="retro-card" onclick="window.location.href='position.html?id=6'" style="cursor: pointer;">
+                <img src="https://placehold.co/400x300/4ecdc4/1a1a1a?text=Nachos\nIcon&font=Righteous"
+                    alt="Arcade Nachos" class="menu-img">
+                <div class="menu-item-info">
+                    <h3>Arcade Nachos</h3>
+                    <p class="menu-desc" data-i18n="desc_nachos">Loaded corn chips with jalapeños, melted cheese, and
+                        salsa.</p>
+                    <div class="menu-price">$10.99</div>
+                    <button class="retro-btn trigger-order" data-item="Arcade Nachos" data-price="10.99"
+                        data-i18n="add_to_cart" onclick="event.stopPropagation();">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../static/libs/anime.min.js"></script>
+    <script src="../static/js/translate.js"></script>
+    <script src="../static/js/animations.js"></script>
+    <script src="../static/js/invoice.js"></script>
+    <script src="../static/js/main.js"></script>
+</body>
+
+</html>
