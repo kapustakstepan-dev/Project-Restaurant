@@ -1,37 +1,38 @@
-// Main script for general interactions
 document.addEventListener('DOMContentLoaded', () => {
-
-    // Smooth scrolling for navigation
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }
-        });
+    // Animación de Logo
+    const logo = document.querySelector('.logo');
+    logo.addEventListener('click', (e) => {
+        e.preventDefault();
+        logo.classList.add('neon-flash');
+        setTimeout(() => {
+            window.location.href = "/";
+        }, 500);
     });
 
-    // Handle Buy Food / Add to Cart example triggers for Invoice popup
-    const orderBtns = document.querySelectorAll('.trigger-order');
-    orderBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const itemName = btn.dataset.item;
-            const itemPrice = parseFloat(btn.dataset.price);
+    // Toggle Login / Registro
+    const btnLogin = document.getElementById('btn-login-tab');
+    const btnReg = document.getElementById('btn-reg-tab');
+    const formLogin = document.getElementById('form-login');
+    const formReg = document.getElementById('form-reg');
 
-            // Mock order data
-            const orderData = {
-                items: [
-                    { name: itemName, price: itemPrice, quantity: 1 }
-                ]
-            };
-
-            if (window.invoiceSystem) {
-                window.invoiceSystem.show(orderData);
-            }
+    if(btnLogin) {
+        btnLogin.addEventListener('click', () => {
+            formLogin.classList.remove('hidden');
+            formReg.classList.add('hidden');
+            btnLogin.classList.add('active');
+            btnReg.classList.remove('active');
         });
-    });
+
+        btnReg.addEventListener('click', () => {
+            formLogin.classList.add('hidden');
+            formReg.classList.remove('hidden');
+            btnReg.classList.add('active');
+            btnLogin.classList.remove('active');
+        });
+    }
 });
+
+// Simulación de envío de factura por email
+function sendInvoice() {
+    alert("Invoice generated! A copy has been sent to your registered email (Placeholder).");
+}
