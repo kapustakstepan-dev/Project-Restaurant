@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         logo.classList.add('neon-flash');
         setTimeout(() => {
-            window.location.href = "/";
+            window.location.href = "home.html";
         }, 500);
     });
 

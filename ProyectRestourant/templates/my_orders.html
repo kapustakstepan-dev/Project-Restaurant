@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <style>
+        .order-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .order-item {
+            display: grid;
+            grid-template-columns: 100px 1fr auto auto;
+            align-items: center;
+            gap: 2rem;
+            background: white;
+            border: 3px solid var(--text-color);
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            box-shadow: 6px 6px 0px var(--accent-color);
+        }
+
+        .order-img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            background: var(--bg-color);
+            border: 2px solid var(--text-color);
+            border-radius: 8px;
+        }
+
+        .order-info h3 {
+            margin-bottom: 0.2rem;
+            color: var(--primary-color);
+        }
+
+        .order-status {
+            font-weight: bold;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            border: 2px solid var(--text-color);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .status-delivered {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .status-preparing {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+        }
+
+        .status-onway {
+            background-color: #ff9f43;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .order-item {
+                grid-template-columns: 1fr;
+                text-align: center;
+                justify-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="home.html" class="logo">RetroBite</a>
+        <ul class="nav-links">
+            <li><a href="menu.html" data-i18n="nav_menu">Menu</a></li>
+            <li><a href="register.html" data-i18n="nav_register">Register</a></li>
+            <li><a href="my_orders.html" data-i18n="nav_orders" style="color: var(--secondary-color);">My Orders</a>
+            </li>
+            <li><a href="reserved.html" data-i18n="nav_reserved">Reservation</a></li>
+        </ul>
+        <div class="lang-switcher">
+            <button class="lang-btn" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="es">ES</button>
+            <button class="lang-btn" data-lang="ua">UA</button>
+        </div>
+    </nav>
+
+    <main class="container animate-reveal">
+        <h1 data-i18n="orders_title"
+            style="text-align: center; font-size: 3rem; text-shadow: 3px 3px 0px var(--accent-color);">
+            My Orders
+        </h1>
+
+        <div class="order-list">
+            <!-- Order 1 -->
+            <div class="order-item">
+                <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxIHEhUSExMTFRATFxcVGBUYFRoWExceHhgXGBkfGRMYHTQgGSAxGxcYITEhKCkrLi8xGB8zRDMuNygwLy4BCgoKDg0OGxAQGzMmICEtLSswLTUtLS8tNS0tLS0tLS8vMC0vLS0vLS0tLS0tLS0tKy0tLS0tLS8tLS0tLS0tLf/AABEIAOEA4QMBEQACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAAAQUDBAYCB//EAEMQAAICAQIEBAIFCgMGBwAAAAECAAMRBBIFEyExBkFRYSIyFEJxgZEHFRYjUmJykqGxJDOiNFNzssHwQ0R0goPR0v/EABkBAQADAQEAAAAAAAAAAAAAAAABAgMEBf/EAC4RAQACAQMCBQIGAwEBAAAAAAABAhEDITESQRMiUWGRMqEEcYGx4fBCwdHxI//aAAwDAQACEQMRAD8A+uTxXaQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAmSIkBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECZIiQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQJkiJAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAmSIkBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECZIiQEBAQEBAQEBAQEBAQEBAQKvW8bXT3DTqpsuKh9getMAkgf5jDceh6DPvjIl4pmMs7akRPT3Z9HxNNS3LIeu4DPLsGH6rbQSrj3UkCRNZjdMXiZw3ZVcgICAgICAgICBMkRICAgICAgICAgICAgIGtreI06AZttrrH77hf7mWiszwra9a8y4nxR40Sq6ta2azTbSWNTmti2cdLNvXAHYEA7upnRp6O2/Ll1dfeMcLvhXFjdUL6bH1Gmzh0YD6TV2zjaPjx32nJIOQx6A52rvidp+zWl9uqN4+7hvyhavT8Ssr1FFm4su1htdCNpyrDcBnuR09BOjRiaxiXLrzW0xarsvCY/P2gr5lrNcjNizI5tTKxCkN67cd87gcHIMw1PJfaHRpR16cZnde8K1jXhq7MC+ohXA6KcjKuv7rDr7EMPKZ2jG8cNqWztPLelF2HWatNEhdzhRgdiSSTgAKOrEk4AHWTETO0K2tFYzLQPiPTD67buuU5VhsXHffUF3IOo6kAdZfw7K+LVmo43ptQ6ot9bO2NoDA5yMjB8zjrjvI6LRvhMalZ2y35RcgICAgTJESAgICAgV/EeLpoWCbLbLCN2ypC7Bc43HyAz079cHEvWkzuzteI2ZOGcUq4oCa2yVOGUgq6H0dG6qftkWrNeU1vFuE67ilHDsC66qst2Duqk/ZkxFbTxBa9a8zhtI4sAIIKnqCDkH7DIWicpkJIFZxjiw0OK0Bs1L42VKNzYyAWYZAVR6kgeWZetM7zwzvqY2jlW61L+XzNXea0GBydMdhYnoAb2O4n+EqO/Uy8YzisfKlotjN5+FpoOC6bRfFXQisepYrmw/xO2WJ++Um9p+leunWN4hWeOeEPxqpa0q3OCWWzcqisjHQg9SCMjp2wD5S+jeKzmZZ69JtGIhyPgzxfX4fqfR3pYCrsQVUEg9AysCRggj/ALxNtXSm85hho60Ujpl2oprDmogPpNYrMo+qHxucD0DKS4x2KufOYZnGe8OnEZx2l8q43oLvC2pZFdlIIdHBxuXOVJx36jBHqDOylovXLhvWdO2H0M+JK1bT6opcFaspeRTZsQHDAs+3BCsGGQT0czl8Od6uvxY2t8utqsW4BlIZWAIIOQQexB85jw6InKs4mwbU6VCR81rgZ6krWQDj23n+kvX6ZZ2+qIZOH2b9TqBhRt5IyAAxBTOSe565A+yRMeWE1+qVLrCuq4Xu2qjOAVCDbtta0bSuOzcwjr3zNI21P7wynE6X95/9XfANS2qoUuc2KXrZu25q7GqJx7lM/fM7xidmunOa7/3CwlGhAQECZIiQEBAQK3xDxJuFU8xVUsWSsbjhAXYKC7Dsozky9K9U4Z6l+muXOcV1+s4FaupurrZdord6d3LZckhXVutbAsxV8lTuIOM5Gta1tGIYWtek9UrXXaccTRNdpCPpAXcp7C5fOqwefYjr1VhKROJ6bcNLR1R105aXhbVU6xLNXaF5l97IS4BKLu2VVnPyjGB6Et7y2pExMVjsrpTWYm095/8AG2KP0dvQVjGk1L7DWO1VpBKsg8lbBBXyOD5mV+uN+YWx4dtuJdFMm6l4vxOx7BpdNj6Qw3PYRlKEP1mHmx+qvn37TStYx1W4ZXvOemvLd4XwtOGKQuWdjl7GO6yw+rN5+w7DsMStrTZalIrDNptVXrgSjBwrbSR2yMHofPuOoiYmOUxMTwzyqxA+e+OfCTcQ1Nb6cDmX53qeijbj9YTjoOoB8846HJnVo6uK4ns49fRmbeXut+FcG1FVVVX0msvpW3KpobI/zEG7NgJQguAQBkDzlLXjMzjletLYiM8ezFqtLqdXnV2BVv0wZkpeoGjBAYgWHqXwuN4JAP2kSYmseWOJRaLT5p5j4X2i1SXBGLqrXqbBX0BcMF25BySQgAOOh69PTKYmP0bVmJ/VW6ZP0b1C1D/YtSxFY8qbe+weiN1IHkQR5y8+eue8M4/+dsdp+0vWo0teq1d/NDl1rpeoqWFiqDYGNZT4s7iQcdwVzIiZisYTMRN5z7NHWcPXVgrpa9Yl7gqdQzXU4z52NYQ1uO4UA+nQGWi2PqxhSaxP0xOfVYW8Hp4QvMNlg0tB5wo+E1h/LHw7z8RyFzjcR7SvXNpx3XmkV3ztHZYcA0zaTTorjFh3O49GdjYw/mYiVvOZ2aacYqsJRcgICBMkRICAgIHjUULqVKOoZGBBUjIIPcESYmY4RMRMYlztqv4cBD5u4aRghvis04PQ5z/mVf1Ueomu1/zYTnT53r+38Nbhfh27TvbVXc9XD2cOgUjmtlQWCWZOxM+fzHHl3M21InEzG6KaVszETiqw13humjTaivTUottlLoGxl2JBwGdup647n3la6k9UTaVraURSYrG+FLoeEV8ZtQbdYNNXWxZbXuTZadoQVbznKjf1GR1EvN5rHbLOtIvPfHvnlY6Hjp0Ggsuube+na2rce9hSw1pn3Pw5++Vmmb4juvXUxpzM9sx98LDw9oTw2je2X1Fv661vrO5GcD2Hygeglbz1Tjsvp16a57y3eHmy+lecALGB3KBgDOemM+mAesrOInZauZru8vZVwpUQDapYIqqPU4/ue/qfUxvYzFdm5KrkCn8Qam0GnT0sqWahnHMZd4RVQs2EPRmPYZ6d5pSI3mezLUmdqx3Uul0Gu0GoFC60FeTvrD0KVO1ghXCkFQMp2P1vaaTNJjOO7KK3rbpi3Zoa3U6rUJa+orv5KvyraqdQnLc5APwuvMVDuHQP2PYCWiRxx+ykzaYnq49v7/s8TV6vjLihQtX0dedy623lGAxTvswAGLdlHYAtk9Ip01jPqanXfb0/sLDxlxqrU0Np6i1+q+BgKVNhrZWDBmKg7eo7d5XSpMT1TtC+tqVmvTG8t3846bxF8Cl11lSlkBV6LkOOuM+WcZHUYxmV6bU37LdVb7Rz8I4X4grqqHO1dfO2jKWqK7UfHxBkGM9fIAdu8WpOdoTXUiI3nd74TW/FrDbcxemsryQazShf4tzipiWIGVClieoJHkZFpisYgpE2nM/8dFMm5AQEBAmSIkBAQEBAx6qrno6ftKy/iCJMTiUWjMK3wldz9Fpz5ipUPsyDYw/FSJfUjF5Z6M5pC2mbVUca4wdMeTQOZrHHwoOyfv2"
+                    alt="Retro Burger" class="order-img">
+                <div class="order-info">
+                    <h3 data-i18n="item_burger">Retro Burger</h3>
+                    <p data-i18n="order_id">Order #12345</p>
+                </div>
+                <div class="order-price">$12.99</div>
+                <div class="order-status status-delivered" data-i18n="status_delivered">Delivered</div>
+            </div>
+
+            <!-- Order 2 -->
+            <div class="order-item">
+                <img src="https://thumbs.dreamstime.com/b/minimalist-fruits-milkshake-kingdom-icon-logo-template-vector-illustration-design-simple-modern-cafes-ice-cream-parlors-dessert-289701935.jpg"
+                    alt="Vintage Milkshake" class="order-img">
+                <div class="order-info">
+                    <h3 data-i18n="item_shake">Vintage Milkshake</h3>
+                    <p data-i18n="order_id2">Order #12348</p>
+                </div>
+                <div class="order-price">$6.50</div>
+                <div class="order-status status-preparing" data-i18n="status_preparing">Preparing</div>
+            </div>
+
+            <!-- Order 3 -->
+            <div class="order-item">
+                <img src="https://placehold.co/400x300/ff6b6b/1a1a1a?text=Pizza\nIcon&font=Righteous"
+                    alt="Old School Pizza" class="order-img">
+                <div class="order-info">
+                    <h3 data-i18n="item_pizza">Old School Pizza</h3>
+                    <p data-i18n="order_id3">Order #12350</p>
+                </div>
+                <div class="order-price">$14.99</div>
+                <div class="order-status status-onway" data-i18n="status_onway">On the Way</div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../static/libs/anime.min.js"></script>
+    <script src="../static/js/translate.js"></script>
+    <script src="../static/js/animations.js"></script>
+    <script src="../static/js/main.js"></script>
+</body>
+
+</html>

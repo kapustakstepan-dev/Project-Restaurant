@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <style>
+        .reservation-content {
+            max-width: 600px;
+            margin: 3rem auto;
+            text-align: center;
+        }
+
+        .reservation-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            text-align: left;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .success-msg {
+            display: none;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            font-weight: bold;
+            border: 3px solid var(--text-color);
+            box-shadow: 4px 4px 0px var(--text-color);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="home.html" class="logo">RetroBite</a>
+        <ul class="nav-links">
+            <li><a href="menu.html" data-i18n="nav_menu">Menu</a></li>
+            <li><a href="register.html" data-i18n="nav_register">Register</a></li>
+            <li><a href="my_orders.html" data-i18n="nav_orders">My Orders</a></li>
+            <li><a href="reserved.html" data-i18n="nav_reserved" style="color: var(--secondary-color);">Reservation</a>
+            </li>
+        </ul>
+        <div class="lang-switcher">
+            <button class="lang-btn" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="es">ES</button>
+            <button class="lang-btn" data-lang="ua">UA</button>
+        </div>
+    </nav>
+
+    <main class="container animate-reveal">
+        <div class="reservation-content">
+            <h1 data-i18n="res_title"
+                style="font-size: 3rem; margin-bottom: 1rem; text-shadow: 3px 3px 0px var(--accent-color);">
+                Book a Table
+            </h1>
+            <p data-i18n="res_subtitle" style="margin-bottom: 3rem; font-size: 1.1rem;">
+                Experience nostalgic dining at its best. Secure your spot today!
+            </p>
+
+            <div id="success-message" class="success-msg" data-i18n="res_success">
+                Reservation submitted successfully! See you soon.
+            </div>
+
+            <form id="res-form" class="retro-form reservation-form">
+                <div class="form-group">
+                    <label for="name" data-i18n="label_name">Name</label>
+                    <input type="text" id="name" class="retro-input" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label for="email" data-i18n="label_email">Email</label>
+                    <input type="email" id="email" class="retro-input" required placeholder="john@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="phone" data-i18n="label_phone">Phone</label>
+                    <input type="tel" id="phone" class="retro-input" required placeholder="+1 234 567 890">
+                </div>
+                <div class="form-group">
+                    <label for="guests" data-i18n="label_guests">Guests</label>
+                    <input type="number" id="guests" class="retro-input" required min="1" max="10" value="2">
+                </div>
+                <div class="form-group">
+                    <label for="date" data-i18n="label_date">Date</label>
+                    <input type="date" id="date" class="retro-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="time" data-i18n="label_time">Time</label>
+                    <input type="time" id="time" class="retro-input" required>
+                </div>
+
+                <div class="full-width" style="text-align: center; margin-top: 1rem;">
+                    <button type="submit" class="retro-btn" style="width: 100%; font-size: 1.2rem;"
+                        data-i18n="btn_reserve">
+                        Confirm Reservation
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="../static/libs/anime.min.js"></script>
+    <script src="../static/js/translate.js"></script>
+    <script src="../static/js/animations.js"></script>
+    <script src="../static/js/main.js"></script>
+    <script>
+        document.getElementById('res-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('res-form').style.display = 'none';
+            document.getElementById('success-message').style.display = 'block';
+
+            anime({
+                targets: '#success-message',
+                translateY: [-20, 0],
+                opacity: [0, 1],
+                duration: 800,
+                easing: 'easeOutElastic(1, .8)'
+            });
+        });
+    </script>
+</body>
+
+</html>
