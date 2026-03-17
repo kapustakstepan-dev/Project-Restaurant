@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оформлення замовлення</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .order-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed #ccc;
+        }
+
+        .empty-msg {
+            text-align: center;
+            color: #7f8c8d;
+        }
+
+        .btn-confirm {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .btn-confirm:hover {
+            background: #219150;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #3498db;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="order-container">
+        <h2>🛒 Ваше замовлення</h2>
+
+        {% if basket %}
+        <ul>
+            {% for position, count in basket.items() %}
+            <li>
+                <span><strong>{{ position }}</strong></span>
+                <span>x{{ count }} шт.</span>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <form method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+            <button type="submit" class="btn-confirm">Підтвердити та замовити</button>
+        </form>
+        {% else %}
+        <div class="empty-msg">
+            <p>Ваш список замовлень порожній</p>
+            <a href="/ProyectRestourant/templates/menu.html" class="back-link">Повернутися до меню</a>
+        </div>
+        {% endif %}
+
+        <a href="/ProyectRestourant/templates/menu.html" class="back-link">← Додати ще щось</a>
+    </div>
+
+</body>
+
+</html>

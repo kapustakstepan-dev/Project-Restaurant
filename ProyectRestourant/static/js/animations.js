@@ -1,4 +1,4 @@
-// Background Particles Animation
+// ¡Hola! Estas son las animaciones que hacen que RetroBite se vea genial. Todo está limpio para que la magia ocurra sin distracciones.
 function initBackgroundParticles() {
     const canvas = document.createElement('canvas');
     canvas.id = 'bg-canvas';
@@ -64,9 +64,8 @@ function initBackgroundParticles() {
     animate();
 }
 
-// Page Elements Animations using anime.js
 function initPageAnimations() {
-    // Reveal text on load
+
     const reveals = document.querySelectorAll('.animate-reveal');
     if (reveals.length > 0) {
         anime({
@@ -79,7 +78,7 @@ function initPageAnimations() {
         });
     }
 
-    // 3D Card tilt effect
+
     const cards = document.querySelectorAll('.retro-card');
     cards.forEach(card => {
         card.addEventListener('mousemove', (e) => {
@@ -106,6 +105,5 @@ function initPageAnimations() {
 
 document.addEventListener('DOMContentLoaded', () => {
     initBackgroundParticles();
-    // Wait for the DOM and possible framework hydration
     setTimeout(initPageAnimations, 100);
 });

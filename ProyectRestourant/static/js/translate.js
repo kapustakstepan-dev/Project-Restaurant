@@ -242,7 +242,6 @@ class Translator {
     }
 }
 
-// Initialize on DOM load
 document.addEventListener('DOMContentLoaded', () => {
     window.translator = new Translator();
 });

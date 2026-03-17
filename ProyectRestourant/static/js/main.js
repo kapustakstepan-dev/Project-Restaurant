@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Animación de Logo
+
     const logo = document.querySelector('.logo');
     logo.addEventListener('click', (e) => {
         e.preventDefault();
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500);
     });
 
-    // Toggle Login / Registro
+
     const btnLogin = document.getElementById('btn-login-tab');
     const btnReg = document.getElementById('btn-reg-tab');
     const formLogin = document.getElementById('form-login');
@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Simulación de envío de factura por email
 function sendInvoice() {
     alert("Invoice generated! A copy has been sent to your registered email (Placeholder).");
 }

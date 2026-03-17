@@ -1,3 +1,4 @@
+// ¡Hola! Aquí tienes la lógica para generar las facturas de RetroBite. Todo está limpio y listo para que los clientes reciban sus recibos.
 class InvoiceGenerator {
     constructor() {
         this.createInvoiceDOM();
@@ -17,7 +18,7 @@ class InvoiceGenerator {
                     <p>Order #<span id="inv-id"></span></p>
                 </div>
                 <div class="invoice-details" id="inv-items">
-                    <!-- Items injected here -->
+
                 </div>
                 <div class="invoice-total">
                     <span data-i18n="total">Total</span>: $<span id="inv-total"></span>
@@ -64,7 +65,6 @@ class InvoiceGenerator {
         document.getElementById('inv-total').textContent = total.toFixed(2);
 
         document.getElementById('invoice-modal').classList.add('active');
-        // Re-run translator to catch dynamically injected data-i18n keys
         if (window.translator) window.translator.updateDOM();
     }
 
