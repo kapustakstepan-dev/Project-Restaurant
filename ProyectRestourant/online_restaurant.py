@@ -162,7 +162,10 @@ def reserved():
 def page_not_found(e):
     return render_template('404.html'), 404
 
-# ---------------- MAIN ---------------- #
+@app.route('/<path:filename>.html')
+def remove_html(filename):
+    return redirect(f'/{filename}')
+
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)

@@ -56,7 +56,8 @@
     <nav class="navbar">
         <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
         <ul class="nav-links">
-            <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu" style="color: var(--secondary-color);">Menu</a></li>
+            <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu" style="color: var(--secondary-color);">Menu</a>
+            </li>
             <li><a href="{{ url_for('register') }}" data-i18n="nav_register">Register</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
             <li><a href="{{ url_for('reserved') }}" data-i18n="nav_reserved">Reservation</a></li>
@@ -114,7 +115,8 @@
             </div>
 
             <div class="retro-card" onclick="window.location.href='chicken-wrap.html'" style="cursor: pointer;">
-                <img src="https://www.cookingclassy.com/wp-content/uploads/2016/07/chicken-caesar-wrap-2.jpg" alt="Chicken Wrap" class="menu-img">
+                <img src="https://www.cookingclassy.com/wp-content/uploads/2016/07/chicken-caesar-wrap-2.jpg"
+                    alt="Chicken Wrap" class="menu-img">
                 <div class="menu-item-info">
                     <h3 data-i18n="item_wrap">Chicken Wrap</h3>
                     <p class="menu-desc" data-i18n="desc_wrap">Tender grilled chicken with fresh veggies and garlic
@@ -155,7 +157,7 @@
     </main>
 
     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/translate.js`') }}"></script>
+    <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
     <script src="{{ url_for('static', filename='js/invoice.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>

@@ -60,7 +60,11 @@ const translations = {
         login_footer: "Don't have an account? ",
         register_footer: "Already have an account? ",
         login_link: "Login",
-        register_link: "Register"
+        register_link: "Register",
+        error_404_subtitle: "Page Not Found",
+        error_404_description1: "It seems you've lost yourself in time.",
+        error_404_description2: "Return to the present for the best retro flavor!",
+        error_404_btn: "BACK TO HOME"
     },
     es: {
         nav_home: "Inicio",
@@ -123,7 +127,11 @@ const translations = {
         login_footer: "¿No tienes una cuenta? ",
         register_footer: "¿Ya tienes una cuenta? ",
         login_link: "Iniciar sesión",
-        register_link: "Registrarse"
+        register_link: "Registrarse",
+        error_404_subtitle: "Página no encontrada",
+        error_404_description1: "Parece que te has perdido en el tiempo.",
+        error_404_description2: "¡Vuelve al presente para disfrutar del mejor sabor retro!",
+        error_404_btn: "VOLVER AL INICIO"
     },
     ua: {
         nav_home: "Головна",
@@ -186,7 +194,11 @@ const translations = {
         login_footer: "Немає акаунту? ",
         register_footer: "Вже є акаунт? ",
         login_link: "Увійти",
-        register_link: "Реєстрація"
+        register_link: "Реєстрація",
+        error_404_subtitle: "Сторінку не знайдено",
+        error_404_description1: "Схоже, ви загубилися в часі.",
+        error_404_description2: "Поверніться в сьогодення за найкращим ретро смаком!",
+        error_404_btn: "ПОВЕРНУТИСЯ НА ГОЛОВНУ"
     }
 };
 

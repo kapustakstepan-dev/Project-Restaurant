@@ -73,7 +73,8 @@
     <nav class="navbar">
         <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
         <ul class="nav-links">
-            <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu" style="color: var(--secondary-color);">Menu</a></li>
+            <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu" style="color: var(--secondary-color);">Menu</a>
+            </li>
             <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
             <li><a href="{{ url_for('register') }}" data-i18n="nav_register">Register</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
@@ -116,7 +117,7 @@
         </div>
     </main>
 
-     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/translate.js`') }}"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
     <script src="{{ url_for('static', filename='js/invoice.js') }}"></script>

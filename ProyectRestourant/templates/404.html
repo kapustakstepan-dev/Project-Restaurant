@@ -1,57 +1,221 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404</title>
-    <link rel="stylesheet" href='static', filename='css/style.css'>
+    <title>404 - Página no Encontrada | RetroBite</title>
+    <!-- Use relative path to style.css or Flask's url_for -->
+    <link rel="stylesheet" href="../static/css/style.css">
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             background: var(--bg-color);
-            color: var(--text-color);
-            flex-direction: column;
+            margin: 0;
+            overflow: hidden;
+            font-family: var(--font-body);
+        }
+
+        .error-container {
+            position: relative;
+            z-index: 2;
             text-align: center;
+            padding: 2.5rem;
+            max-width: 600px;
+            animation: fadeIn 0.8s ease-out;
         }
 
-        h1 {
-            font-size: 8rem;
-            color: var(--accent-color);
-            margin-bottom: 1rem;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        h2 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
+        /* Glitch Animation for 404 */
+        .glitch {
+            font-family: var(--font-heading);
+            font-size: clamp(6rem, 20vw, 12rem);
             color: var(--primary-color);
+            position: relative;
+            text-shadow: 4px 4px 0px var(--accent-color);
+            margin: 0;
+            line-height: 1;
         }
 
-        a {
-            text-decoration: none;
-            color: white;
+        .glitch::before,
+        .glitch::after {
+            content: "404";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+
+        .glitch::before {
+            color: var(--secondary-color);
+            z-index: -1;
+            animation: glitch-anim 2s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            color: var(--accent-color);
+            z-index: -2;
+            animation: glitch-anim 3s infinite linear alternate;
+        }
+
+        @keyframes glitch-anim {
+            0% {
+                clip-path: inset(10% 0 30% 0);
+                transform: translate(-2px, 2px);
+            }
+
+            20% {
+                clip-path: inset(40% 0 10% 0);
+                transform: translate(2px, -2px);
+            }
+
+            40% {
+                clip-path: inset(70% 0 5% 0);
+                transform: translate(-1px, 1px);
+            }
+
+            60% {
+                clip-path: inset(20% 0 60% 0);
+                transform: translate(1px, -1px);
+            }
+
+            80% {
+                clip-path: inset(50% 0 20% 0);
+                transform: translate(-2px, 0);
+            }
+
+            100% {
+                clip-path: inset(10% 0 40% 0);
+                transform: translate(2px, 2px);
+            }
+        }
+
+        .subtitle {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--text-color);
+            margin: 1rem 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* Particles Background */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
             background-color: var(--secondary-color);
-            padding: 0.8rem 1.5rem;
-            border-radius: 12px;
-            font-weight: bold;
-            transition: all 0.3s;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite linear;
         }
 
-        a:hover {
-            background-color: var(--accent-color);
-            transform: scale(1.05);
+        @keyframes float {
+            from {
+                transform: translateY(110vh) rotate(0deg);
+            }
+
+            to {
+                transform: translateY(-10vh) rotate(360deg);
+            }
+        }
+
+        /* Home Button Style Override */
+        .home-btn {
+            font-size: 1.2rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
         }
     </style>
 </head>
 
 <body>
-    <h1>404</h1>
-    <h2>Oops! Page not found</h2>
-    <p>The page you are looking for doesn’t exist or has been moved.</p>
-    <a href="{{ url_for('menu') }}">Back to Home</a>
+    <!-- Background Particles -->
+    <div class="particles" id="particle-container"></div>
+
+    <main class="error-container">
+        <h1 class="glitch" data-text="404">404</h1>
+        <h2 class="subtitle" data-i18n="error_404_subtitle">Página no encontrada</h2>
+        <p class="description">
+            <span data-i18n="error_404_description1">Parece que te has perdido en el tiempo.</span> <br>
+            <span data-i18n="error_404_description2">¡Vuelve al presente para disfrutar del mejor sabor retro!</span>
+        </p>
+        <a href="{{ url_for('home') }}" class="retro-btn home-btn" data-i18n="error_404_btn">
+            VOLVER AL INICIO
+        </a>
+    </main>
+
+    <script src="../static/js/translate.js"></script>
+    <script>
+        // Simple particle generator for the 404 page
+        const container = document.getElementById('particle-container');
+        const particleCount = 20;
+        const colors = ['#ff6b6b', '#4ecdc4', '#ffd166'];
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+
+            const size = Math.random() * 30 + 15;
+            const left = Math.random() * 100;
+            const delay = Math.random() * 100;
+            const duration = Math.random() * 10 + 10;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${left}%`;
+            particle.style.backgroundColor = color;
+            particle.style.animationDelay = `${delay}s`;
+            particle.style.animationDuration = `${duration}s`;
+
+            // Random shape: some squares, some circles
+            if (Math.random() > 0.5) {
+                particle.style.borderRadius = '4px';
+            }
+
+            container.appendChild(particle);
+        }
+
+        // Slight parallax effect on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            document.querySelector('.error-container').style.transform = `translate(${x}px, ${y}px)`;
+        });
+    </script>
 </body>
 
 </html>

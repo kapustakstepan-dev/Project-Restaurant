@@ -46,7 +46,8 @@
             <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu">Menu</a></li>
             <li><a href="{{ url_for('register') }}" data-i18n="nav_register">Register</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
-            <li><a href="{{ url_for('reserved') }}" data-i18n="nav_reserved" style="color: var(--secondary-color);">Reservation</a>
+            <li><a href="{{ url_for('reserved') }}" data-i18n="nav_reserved"
+                    style="color: var(--secondary-color);">Reservation</a>
             </li>
         </ul>
         <div class="lang-switcher">
@@ -106,8 +107,8 @@
         </div>
     </main>
 
-     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/translate.js`') }}"></script>
+    <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
