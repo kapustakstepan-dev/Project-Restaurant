@@ -1,4 +1,3 @@
-# ¡Listo! Aquí tenemos toda la estructura de la base de datos limpia y organizada para que todo funcione de maravilla.
 import os
 import bcrypt
 from datetime import datetime
@@ -11,7 +10,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 DATABASE_URL = f"postgresql+psycopg2://{os.getenv('DB_USER')}:{os.getenv('DB_PASS')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
 
 engine = create_engine(DATABASE_URL, echo=True)
@@ -22,9 +20,10 @@ class Base(DeclarativeBase):
 
 class Users(Base, UserMixin):
     __tablename__ = 'users'
+    
     id: Mapped[int] = mapped_column(primary_key=True)
     nickname: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
-    password = Mapped[str] = mapped_column(String(200), nullable=False)
+    password: Mapped[str] = mapped_column(String(200), nullable=False)
     email: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     role: Mapped[str] = mapped_column(String(20), default='client')
 
@@ -36,7 +35,7 @@ class Users(Base, UserMixin):
 
     def check_password(self, password: str) -> bool:
         return bcrypt.checkpw(password.encode('utf-8'), self.password.encode('utf-8'))
-
+    
 class Menu(Base):
     __tablename__ = 'menu'
     id: Mapped[int] = mapped_column(primary_key=True)

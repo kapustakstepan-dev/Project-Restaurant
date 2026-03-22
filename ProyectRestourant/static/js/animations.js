@@ -1,4 +1,3 @@
-// ¡Hola! Estas son las animaciones que hacen que RetroBite se vea genial. Todo está limpio para que la magia ocurra sin distracciones.
 function initBackgroundParticles() {
     const canvas = document.createElement('canvas');
     canvas.id = 'bg-canvas';

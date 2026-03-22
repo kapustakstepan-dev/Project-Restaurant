@@ -1,0 +1,168 @@
+import os
+import sys
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from datetime import datetime
+
+from back.BD.online_restaurant_db import Session, Users, Menu, Reservation, Orders, init_db
+
+app =Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'secret-key')
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    with Session() as db_session:
+        return db_session.query(Users).get(int(user_id))
+
+
+# ---------------- RUTAS ---------------- #
+
+@app.route('/')
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
+@app.route('/menu')
+def menu():
+    with Session() as db_session:
+        all_positions = db_session.query(Menu).filter_by(active=True).all()
+    return render_template('menu.html', all_positions=all_positions)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        nickname = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+
+        with Session() as db_session:
+            if db_session.query(Users).filter_by(nickname=nickname).first():
+                flash("Username already exists!")
+                return redirect(url_for('register'))
+            user = Users(nickname=nickname, email=email, role='client')
+            user.set_password(password)
+            db_session.add(user)
+            db_session.commit()
+
+        flash("User registered successfully!")
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        nickname = request.form['username']
+        password = request.form['password']
+
+        with Session() as db_session:
+            user = db_session.query(Users).filter_by(nickname=nickname).first()
+            if user and user.check_password(password):
+                login_user(user)
+                flash(f"Welcome, {user.nickname}!")
+                return redirect(url_for('menu'))
+            else:
+                flash("Invalid username or password")
+
+    return render_template('login.html')
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("You have been logged out")
+    return redirect(url_for('login'))
+
+
+@app.route('/position/<name>', methods=['GET', 'POST'])
+def position(name):
+    with Session() as db_session:
+        position = db_session.query(Menu).filter_by(name=name).first()
+
+    if request.method == 'POST':
+        num = int(request.form.get('num', 1))
+        if 'basket' not in session:
+            session['basket'] = {}
+        basket = session['basket']
+        basket[name] = basket.get(name, 0) + num
+        session['basket'] = basket
+        flash(f"Added {num} x {name} to basket!")
+        return redirect(url_for('position', name=name))
+
+    return render_template('position.html', position=position)
+
+
+@app.route('/create_order', methods=['GET', 'POST'])
+@login_required
+def create_order():
+    basket = session.get('basket', {})
+    if request.method == 'POST' and basket:
+        with Session() as db_session:
+            order = Orders(
+                order_list=basket,
+                order_time=datetime.now(),
+                state='preparing',
+                user_id=current_user.id
+            )
+            db_session.add(order)
+            db_session.commit()
+        session.pop('basket', None)
+        flash("Order created successfully!")
+        return redirect(url_for('my_orders'))
+    return render_template('create_order.html', basket=basket)
+
+
+@app.route('/my_orders')
+@login_required
+def my_orders():
+    print("My Orders accessed", file=sys.stderr)
+    with Session() as db_session:
+        orders = db_session.query(Orders).filter_by(user_id=current_user.id).all()
+    return render_template('my_orders.html', orders=orders)
+
+
+@app.route('/reservation', methods=['GET', 'POST'])
+@login_required
+def reservation():
+    if request.method == 'POST':
+        time_start_str = request.form['datetime']  # input datetime-local
+        time_start = datetime.strptime(time_start_str, "%Y-%m-%dT%H:%M")
+        table_type = request.form['table_type']
+
+        with Session() as db_session:
+            res = Reservation(
+                time_start=time_start,
+                type_table=table_type,
+                user_id=current_user.id
+            )
+            db_session.add(res)
+            db_session.commit()
+
+        flash("Reservation created successfully!")
+        return redirect(url_for('menu'))
+
+    return render_template('reservation.html')
+
+@app.route('/reserved')
+@login_required
+def reserved():
+    with Session() as db_session:
+        orders = db_session.query(Orders).filter_by(user_id=current_user.id).all()
+    return render_template('reserved.html', orders=orders)
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+# ---------------- MAIN ---------------- #
+if __name__ == '__main__':
+    init_db()
+    app.run(debug=True)

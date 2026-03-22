@@ -5,16 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
     <nav class="navbar">
-        <a href="home.html" class="logo">RetroBite</a>
+        <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
         <ul class="nav-links">
-            <li><a href="menu.html" data-i18n="nav_menu">Menu</a></li>
-            <li><a href="my_orders.html" data-i18n="nav_orders">My Orders</a></li>
-            <li><a href="reserved.html" data-i18n="nav_reserved">Reservation</a></li>
+            <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu">Menu</a></li>
+            <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
+            <li><a href="{{ url_for('reserved') }}" data-i18n="nav_reserved">Reservation</a></li>
         </ul>
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="en">EN</button>
@@ -30,30 +30,31 @@
             <form action="#" method="POST">
                 <div class="form-group">
                     <label for="name" data-i18n="name_label">Full Name</label>
-                    <input type="text" id="name" class="retro-input" required>
+                    <input type="text" id="name" class="retro-input" name="username" required>
                 </div>
                 <div class="form-group">
                     <label for="email" data-i18n="email_label">Email Address</label>
-                    <input type="email" id="email" class="retro-input" required>
+                    <input type="email" id="email" class="retro-input" name="email" required>
                 </div>
                 <div class="form-group">
                     <label for="password" data-i18n="password_label">Password</label>
-                    <input type="password" id="password" class="retro-input" required>
+                    <input type="password" id="password" class="retro-input" name="password" required>
                 </div>
                 <button type="submit" class="retro-btn" style="width: 100%; margin-top: 1rem;"
                     data-i18n="register_btn">Register</button>
             </form>
             <p style="text-align: center; margin-top: 1.5rem;">
-                Already have an account? <a href="login.html"
+                Already have an account? <a href="{{ url_for('login') }}"
                     style="color: var(--secondary-color); font-weight: bold;">Login</a>
             </p>
         </div>
     </main>
 
-    <script src="../static/libs/anime.min.js"></script>
-    <script src="../static/js/translate.js"></script>
-    <script src="../static/js/animations.js"></script>
-    <script src="../static/js/main.js"></script>
+     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/translate.js`') }}"></script>
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
 </body>
 
 </html>

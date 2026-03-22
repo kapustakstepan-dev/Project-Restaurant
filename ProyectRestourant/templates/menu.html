@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu</title>
-    <link rel="stylesheet" href="../static/css/style.css">
+    <title>RetroBite | Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         .menu-grid {
             display: grid;
@@ -54,12 +54,12 @@
 
 <body>
     <nav class="navbar">
-        <a href="home.html" class="logo">RetroBite</a>
+        <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
         <ul class="nav-links">
-            <li><a href="menu.html" data-i18n="nav_menu" style="color: var(--secondary-color);">Menu</a></li>
-            <li><a href="register.html" data-i18n="nav_register">Register</a></li>
-            <li><a href="my_orders.html" data-i18n="nav_orders">My Orders</a></li>
-            <li><a href="reserved.html" data-i18n="nav_reserved">Reservation</a></li>
+            <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu" style="color: var(--secondary-color);">Menu</a></li>
+            <li><a href="{{ url_for('register') }}" data-i18n="nav_register">Register</a></li>
+            <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
+            <li><a href="{{ url_for('reserved') }}" data-i18n="nav_reserved">Reservation</a></li>
         </ul>
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="en">EN</button>
@@ -114,8 +114,7 @@
             </div>
 
             <div class="retro-card" onclick="window.location.href='chicken-wrap.html'" style="cursor: pointer;">
-                <img src="https://www.cookingclassy.com/wp-content/uploads/2016/07/chicken-caesar-wrap-2.jpg"
-                    alt="Chicken Wrap" class="menu-img">
+                <img src="https://www.cookingclassy.com/wp-content/uploads/2016/07/chicken-caesar-wrap-2.jpg" alt="Chicken Wrap" class="menu-img">
                 <div class="menu-item-info">
                     <h3 data-i18n="item_wrap">Chicken Wrap</h3>
                     <p class="menu-desc" data-i18n="desc_wrap">Tender grilled chicken with fresh veggies and garlic
@@ -155,11 +154,12 @@
         </div>
     </main>
 
-    <script src="../static/libs/anime.min.js"></script>
-    <script src="../static/js/translate.js"></script>
-    <script src="../static/js/animations.js"></script>
-    <script src="../static/js/invoice.js"></script>
-    <script src="../static/js/main.js"></script>
+    <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/translate.js`') }}"></script>
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/invoice.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
 </body>
 
 </html>

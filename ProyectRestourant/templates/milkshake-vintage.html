@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vintage Milkshake</title>
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         .position-container {
             display: flex;
@@ -71,13 +71,13 @@
 
 <body>
     <nav class="navbar">
-        <a href="home.html" class="logo">RetroBite</a>
+        <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
         <ul class="nav-links">
-            <li><a href="menu.html" data-i18n="nav_menu" style="color: var(--secondary-color);">Menu</a></li>
-            <li><a href="login.html" data-i18n="nav_login">Login</a></li>
-            <li><a href="register.html" data-i18n="nav_register">Register</a></li>
-            <li><a href="my_orders.html" data-i18n="nav_orders">My Orders</a></li>
-            <li><a href="reserved.html" data-i18n="nav_reserved">Reservation</a></li>
+            <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu" style="color: var(--secondary-color);">Menu</a></li>
+            <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
+            <li><a href="{{ url_for('register') }}" data-i18n="nav_register">Register</a></li>
+            <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
+            <li><a href="{{ url_for('reserved') }}" data-i18n="nav_reserved">Reservation</a></li>
         </ul>
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="en">EN</button>
@@ -87,7 +87,7 @@
     </nav>
 
     <main class="container">
-        <a href="menu.html" class="retro-btn" style="margin-top: 2rem;">&larr; Back to Menu</a>
+        <a href="{{ url_for('menu') }}" class="retro-btn" style="margin-top: 2rem;">&larr; Back to Menu</a>
 
         <div class="position-container animate-reveal">
             <div class="position-image">
@@ -116,11 +116,12 @@
         </div>
     </main>
 
-    <script src="../static/libs/anime.min.js"></script>
-    <script src="../static/js/translate.js"></script>
-    <script src="../static/js/animations.js"></script>
-    <script src="../static/js/invoice.js"></script>
-    <script src="../static/js/main.js"></script>
+   <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/translate.js`') }}"></script>
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/invoice.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
 </body>
 
 </html>
