@@ -15,7 +15,7 @@
         <ul class="nav-links">
             <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu">Menu</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
-            <li><a href="{{ url_for('reserved') }}" data-i18n="nav_reserved">Reservation</a></li>
+            <li><a href="{{ url_for('reservation') }}" data-i18n="nav_reserved">Reservation</a></li>
         </ul>
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="en">EN</button>
@@ -28,7 +28,7 @@
         <div class="retro-form animate-reveal">
             <h2 data-i18n="login_title" style="text-align: center; margin-bottom: 2rem; color: var(--primary-color);">
                 Welcome Back</h2>
-            <form action="#" method="POST">
+            <form action="{{ url_for('login') }}" method="POST">
                 <div class="form-group">
                     <label for="email" data-i18n="email_label">Email Address</label>
                     <input type="text" id="email" class="retro-input" name="username" required>

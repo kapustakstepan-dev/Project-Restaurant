@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -25,10 +25,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: var(--font-heading);
-            font-size: 1.5rem;
-            color: var(--text-color);
-            box-shadow: 4px 4px 0px var(--text-color);
+            overflow: hidden;
+        }
+
+        .menu-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .menu-item-info {
@@ -56,11 +59,9 @@
     <nav class="navbar">
         <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
         <ul class="nav-links">
-            <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu" style="color: var(--secondary-color);">Menu</a>
-            </li>
-            <li><a href="{{ url_for('register') }}" data-i18n="nav_register">Register</a></li>
+            <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu" style="color: var(--secondary-color);">Menu</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
-            <li><a href="{{ url_for('reserved') }}" data-i18n="nav_reserved">Reservation</a></li>
+            <li><a href="{{ url_for('reservation') }}" data-i18n="nav_reserved">Reservation</a></li>
         </ul>
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="en">EN</button>
@@ -76,7 +77,7 @@
 
         <div class="menu-grid">
             <div class="retro-card" onclick="window.location.href='retro-burger.html'" style="cursor: pointer;">
-                <img src="https://t3.ftcdn.net/jpg/16/38/86/44/360_F_1638864437_qEmxkVvPxLkqV1AVgwPy6KDdBpP0RAFa.jpg"
+                <img src="/ProyectRestourant/image//burger.jpg"
                     alt="Retro Burger" class="menu-img">
                 <div class="menu-item-info">
                     <h3 data-i18n="item_burger">Retro Burger</h3>
@@ -89,7 +90,7 @@
             </div>
 
             <div class="retro-card" onclick="window.location.href='fries-deluxe.html'" style="cursor: pointer;">
-                <img src="https://img.freepik.com/free-photo/food-arrangement-with-fries-stand_23-2148314174.jpg?semt=ais_rp_progressive&w=740&q=80"
+                <img src="/ProyectRestourant/image//fries.jpg"
                     alt="Diner Fries" class="menu-img">
                 <div class="menu-item-info">
                     <h3 data-i18n="item_fries">Classic Diner Fries</h3>
@@ -102,7 +103,7 @@
             </div>
 
             <div class="retro-card" onclick="window.location.href='milkshake-vintage.html'" style="cursor: pointer;">
-                <img src="https://static.vecteezy.com/system/resources/thumbnails/065/638/014/small/a-delightful-milkshake-in-a-retro-diner-setting-free-photo.jpeg"
+                <img src="/ProyectRestourant/image//milkshake.jpg"
                     alt="Vintage Milkshake" class="menu-img">
                 <div class="menu-item-info">
                     <h3 data-i18n="item_shake">Vintage Milkshake</h3>
@@ -115,7 +116,7 @@
             </div>
 
             <div class="retro-card" onclick="window.location.href='chicken-wrap.html'" style="cursor: pointer;">
-                <img src="https://www.cookingclassy.com/wp-content/uploads/2016/07/chicken-caesar-wrap-2.jpg"
+                <img src="/ProyectRestourant/image//chicken-wrap.jpg"
                     alt="Chicken Wrap" class="menu-img">
                 <div class="menu-item-info">
                     <h3 data-i18n="item_wrap">Chicken Wrap</h3>
@@ -129,7 +130,7 @@
             </div>
 
             <div class="retro-card" onclick="window.location.href='pizza-classic.html'" style="cursor: pointer;">
-                <img src="https://burst.shopifycdn.com/photos/classic-pizza-with-peppers-and-parmesian.jpg?width=925&format=pjpg&exif=0&iptc=0"
+                <img src="/ProyectRestourant/image//pizza.jpg"
                     alt="Classic Pizza" class="menu-img">
                 <div class="menu-item-info">
                     <h3 data-i18n="item_pizza">Classic Pizza</h3>
@@ -142,7 +143,7 @@
             </div>
 
             <div class="retro-card" onclick="window.location.href='arcade-nachos.html'" style="cursor: pointer;">
-                <img src="https://torontolife.mblycdn.com/tl/resized/2024/05/w1280/toronto-restaurants-greta-arcade-bar-king-west-nachos-scaled.jpg"
+                <img src="/ProyectRestourant/image//nachos.jpg"
                     alt="Arcade Nachos" class="menu-img">
                 <div class="menu-item-info">
                     <h3 data-i18n="item_nachos">Arcade Nachos</h3>
@@ -155,6 +156,14 @@
             </div>
         </div>
     </main>
+    <script>
+    document.querySelectorAll('.menu-link').forEach(card => {
+        card.addEventListener('click', () => {
+            const url = card.dataset.url;
+            window.location.href = url;
+        });
+    });
+    </script>
 
     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/translate.js') }}"></script>

@@ -20,8 +20,6 @@ def load_user(user_id):
         return db_session.query(Users).get(int(user_id))
 
 
-# ---------------- RUTAS ---------------- #
-
 @app.route('/')
 @app.route('/home')
 def home():
@@ -133,7 +131,7 @@ def my_orders():
 @login_required
 def reservation():
     if request.method == 'POST':
-        time_start_str = request.form['datetime']  # input datetime-local
+        time_start_str = request.form['datetime']
         time_start = datetime.strptime(time_start_str, "%Y-%m-%dT%H:%M")
         table_type = request.form['table_type']
 
@@ -147,24 +145,73 @@ def reservation():
             db_session.commit()
 
         flash("Reservation created successfully!")
-        return redirect(url_for('menu'))
+        return redirect(url_for('my_reservations'))
 
     return render_template('reservation.html')
 
-@app.route('/reserved')
+
+@app.route('/my_reservations')
 @login_required
-def reserved():
+def my_reservations():
     with Session() as db_session:
-        orders = db_session.query(Orders).filter_by(user_id=current_user.id).all()
-    return render_template('reserved.html', orders=orders)
+        res_list = db_session.query(Reservation).filter_by(user_id=current_user.id).all()
+        order_list = db_session.query(Orders).filter_by(user_id=current_user.id).all()
+    return render_template('my_reservations.html', reservations=res_list, orders=order_list)
+
+@app.route('/menu_check', methods=['GET', 'POST'])
+@login_required
+def menu_check():
+    if current_user.nickname != 'Admin':
+        return redirect(url_for('home'))
+
+    # Initialize CSRF token if not present
+    if 'csrf_token' not in session:
+        import secrets
+        session['csrf_token'] = secrets.token_hex(16)
+
+    if request.method == 'POST':
+        if request.form.get("csrf_token") != session['csrf_token']:
+            return "Blocked", 403
+
+        position_id = request.form['pos_id']
+        with Session() as cursor:
+            position = cursor.query(Menu).filter_by(id=position_id).first()
+
+            if position:
+                if 'change_status' in request.form:
+                    position.active = not position.active
+                elif 'delete_position' in request.form:
+                    cursor.delete(position)
+                cursor.commit()
+
+    with Session() as cursor:
+        all_positions = cursor.query(Menu).all()
+
+    return render_template('check_menu.html', all_positions=all_positions, csrf_token=session["csrf_token"])
+
+
+@app.route('/all_users')
+@login_required
+def all_users():
+    if current_user.nickname != 'Admin':
+        return redirect(url_for('home'))
+
+    with Session() as cursor:
+        all_users_list = cursor.query(Users).all()
+
+    return render_template('all_users.html', all_users=all_users_list)
+
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
 
+
 @app.route('/<path:filename>.html')
 def remove_html(filename):
     return redirect(f'/{filename}')
+
+
 
 if __name__ == '__main__':
     init_db()
