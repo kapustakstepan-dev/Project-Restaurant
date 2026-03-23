@@ -3,6 +3,7 @@ import sys
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from datetime import datetime
+from sqlalchemy.exc import IntegrityError
 
 from back.BD.online_restaurant_db import Session, Users, Menu, Reservation, Orders, init_db
 
@@ -43,10 +44,21 @@ def register():
             if db_session.query(Users).filter_by(nickname=nickname).first():
                 flash("Username already exists!")
                 return redirect(url_for('register'))
+            
+            if db_session.query(Users).filter_by(email=email).first():
+                flash("Email already registered!")
+                return redirect(url_for('register'))
+
             user = Users(nickname=nickname, email=email, role='client')
             user.set_password(password)
-            db_session.add(user)
-            db_session.commit()
+            
+            try:
+                db_session.add(user)
+                db_session.commit()
+            except IntegrityError:
+                db_session.rollback()
+                flash("Email already exists!")
+                return redirect(url_for('register'))
 
         flash("User registered successfully!")
         return redirect(url_for('login'))
@@ -87,6 +99,7 @@ def position(name):
 
     if request.method == 'POST':
         num = int(request.form.get('num', 1))
+        num = min(num, 10) # Max 10 per product
         if 'basket' not in session:
             session['basket'] = {}
         basket = session['basket']
@@ -157,6 +170,17 @@ def my_reservations():
         res_list = db_session.query(Reservation).filter_by(user_id=current_user.id).all()
         order_list = db_session.query(Orders).filter_by(user_id=current_user.id).all()
     return render_template('my_reservations.html', reservations=res_list, orders=order_list)
+
+@app.route('/delete_reservation/<int:id>', methods=['POST'])
+@login_required
+def delete_reservation(id):
+    with Session() as db_session:
+        res = db_session.query(Reservation).filter_by(id=id, user_id=current_user.id).first()
+        if res:
+            db_session.delete(res)
+            db_session.commit()
+            flash("Reservation deleted successfully!")
+    return redirect(url_for('my_reservations'))
 
 @app.route('/menu_check', methods=['GET', 'POST'])
 @login_required

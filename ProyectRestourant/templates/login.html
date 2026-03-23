@@ -11,11 +11,21 @@
 
 <body>
     <nav class="navbar">
-        <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
+        <div style="display: flex; align-items: center;">
+            <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
+            {% if current_user.is_authenticated %}
+                <span class="user-info" style="margin-left: 1rem; font-weight: bold; color: var(--primary-color); font-family: var(--font-heading);">{{ current_user.nickname }}</span>
+            {% endif %}
+        </div>
         <ul class="nav-links">
             <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu">Menu</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
-            <li><a href="{{ url_for('reservation') }}" data-i18n="nav_reserved">Reservation</a></li>
+            <li><a href="{{ url_for('my_reservations') }}" data-i18n="nav_reserved">Reservation</a></li>
+            {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
+            {% endif %}
         </ul>
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="en">EN</button>
@@ -30,7 +40,7 @@
                 Welcome Back</h2>
             <form action="{{ url_for('login') }}" method="POST">
                 <div class="form-group">
-                    <label for="email" data-i18n="email_label">Email Address</label>
+                    <label for="email" data-i18n="email_label">Nickname</label>
                     <input type="text" id="email" class="retro-input" name="username" required>
                 </div>
                 <div class="form-group">

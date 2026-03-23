@@ -98,15 +98,15 @@
         {% else %}
         <div class="empty-msg">
             <p>Ваш список замовлень порожній</p>
-            <a href="{{ url_for('/ProyectRestourant/templates/menu') }}" class="back-link">Повернутися до меню</a>
+            <a href="{{ url_for('menu') }}" class="back-link">Повернутися до меню</a>
         </div>
         {% endif %}
 
-        <a href="{{ url_for('/ProyectRestourant/templates/menu') }}" class="back-link">← Додати ще щось</a>
+        <a href="{{ url_for('menu') }}" class="back-link">← Додати ще щось</a>
     </div>
 
     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/translate.js`') }}"></script>
+    <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
     <script src="{{ url_for('static', filename='js/invoice.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>

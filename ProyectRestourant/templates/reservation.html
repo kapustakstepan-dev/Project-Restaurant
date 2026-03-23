@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservation</title>
+    <title>Reservation | RetroBite</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         .reservation-content {
@@ -23,17 +23,11 @@
         .full-width {
             grid-column: span 2;
         }
-
-        .success-msg {
-            display: none;
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
+        .user-info {
+            margin-left: 1rem;
             font-weight: bold;
-            border: 3px solid var(--text-color);
-            box-shadow: 4px 4px 0px var(--text-color);
+            color: var(--primary-color);
+            font-family: var(--font-heading);
         }
     </style>
 </head>
@@ -41,14 +35,21 @@
 <body>
 
     <nav class="navbar">
-        <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
+        <div style="display: flex; align-items: center;">
+            <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
+            {% if current_user.is_authenticated %}
+                <span class="user-info">{{ current_user.nickname }}</span>
+            {% endif %}
+        </div>
         <ul class="nav-links">
             <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu">Menu</a></li>
-            <li><a href="{{ url_for('register') }}" data-i18n="nav_register">Register</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
-            <li><a href="{{ url_for('reserved') }}" data-i18n="nav_reserved"
-                    style="color: var(--secondary-color);">Reservation</a>
-            </li>
+            <li><a href="{{ url_for('my_reservations') }}" data-i18n="nav_reserved" style="color: var(--secondary-color);">Reservation</a></li>
+            {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
+            {% endif %}
         </ul>
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="en">EN</button>
@@ -67,34 +68,19 @@
                 Experience nostalgic dining at its best. Secure your spot today!
             </p>
 
-            <div id="success-message" class="success-msg" data-i18n="res_success">
-                Reservation submitted successfully! See you soon.
-            </div>
-
-            <form id="res-form" class="retro-form reservation-form">
-                <div class="form-group">
-                    <label for="name" data-i18n="label_name">Name</label>
-                    <input type="text" id="name" class="retro-input" required placeholder="John Doe">
+            <form id="res-form" method="POST" action="{{ url_for('reservation') }}" class="retro-form reservation-form">
+                <div class="form-group full-width">
+                    <label for="datetime" data-i18n="label_date">Date & Time</label>
+                    <input type="datetime-local" id="datetime" name="datetime" class="retro-input" required>
                 </div>
-                <div class="form-group">
-                    <label for="email" data-i18n="label_email">Email</label>
-                    <input type="email" id="email" class="retro-input" required placeholder="john@example.com">
-                </div>
-                <div class="form-group">
-                    <label for="phone" data-i18n="label_phone">Phone</label>
-                    <input type="tel" id="phone" class="retro-input" required placeholder="+1 234 567 890">
-                </div>
-                <div class="form-group">
-                    <label for="guests" data-i18n="label_guests">Guests</label>
-                    <input type="number" id="guests" class="retro-input" required min="1" max="10" value="2">
-                </div>
-                <div class="form-group">
-                    <label for="date" data-i18n="label_date">Date</label>
-                    <input type="date" id="date" class="retro-input" required>
-                </div>
-                <div class="form-group">
-                    <label for="time" data-i18n="label_time">Time</label>
-                    <input type="time" id="time" class="retro-input" required>
+                
+                <div class="form-group full-width">
+                    <label for="table_type" data-i18n="label_guests">Table Type / Guests</label>
+                    <select id="table_type" name="table_type" class="retro-input" required>
+                        <option value="2-persons" data-i18n="option_2">2 Persons - Romantic Booth</option>
+                        <option value="4-persons" data-i18n="option_4">4 Persons - Family Table</option>
+                        <option value="6-persons" data-i18n="option_6">6+ Persons - Party Lounge</option>
+                    </select>
                 </div>
 
                 <div class="full-width" style="text-align: center; margin-top: 1rem;">
@@ -111,22 +97,6 @@
     <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
-    <script>
-        document.getElementById('res-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            document.getElementById('res-form').style.display = 'none';
-            document.getElementById('success-message').style.display = 'block';
-
-            anime({
-                targets: '#success-message',
-                translateY: [-20, 0],
-                opacity: [0, 1],
-                duration: 800,
-                easing: 'easeOutElastic(1, .8)'
-            });
-        });
-    </script>
 </body>
 
 </html>

@@ -52,16 +52,32 @@
             opacity: 0.8;
             min-height: 45px;
         }
+        .user-info {
+            margin-left: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-family: var(--font-heading);
+        }
     </style>
 </head>
 
 <body>
     <nav class="navbar">
-        <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
+        <div style="display: flex; align-items: center;">
+            <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
+            {% if current_user.is_authenticated %}
+                <span class="user-info">{{ current_user.nickname }}</span>
+            {% endif %}
+        </div>
         <ul class="nav-links">
             <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu" style="color: var(--secondary-color);">Menu</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
-            <li><a href="{{ url_for('reservation') }}" data-i18n="nav_reserved">Reservation</a></li>
+            <li><a href="{{ url_for('my_reservations') }}" data-i18n="nav_reserved">Reservation</a></li>
+            {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
+            {% endif %}
         </ul>
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="en">EN</button>
@@ -71,96 +87,106 @@
     </nav>
 
     <main class="container animate-reveal">
-        <h1 data-i18n="menu_title"
-            style="text-align: center; font-size: 3rem; text-shadow: 3px 3px 0px var(--accent-color);">Food From The
-            Past</h1>
+        <h1 data-i18n="menu_title" style="text-align: center; font-size: 3rem; text-shadow: 3px 3px 0px var(--accent-color);">Food From The Past</h1>
 
         <div class="menu-grid">
-            <div class="retro-card" onclick="window.location.href='retro-burger.html'" style="cursor: pointer;">
-                <img src="/ProyectRestourant/image//burger.jpg"
-                    alt="Retro Burger" class="menu-img">
+            <div class="retro-card menu-link" data-url="{{ url_for('position', name='Retro Burger') }}" style="cursor: pointer;">
+                <div class="menu-img">
+                    <img src="{{ url_for('static', filename='image/burger.jpg') }}" alt="Retro Burger">
+                </div>
                 <div class="menu-item-info">
                     <h3 data-i18n="item_burger">Retro Burger</h3>
-                    <p class="menu-desc" data-i18n="desc_burger">Classic double patty with melted cheese, lettuce, and
-                        secret diner sauce.</p>
+                    <p class="menu-desc" data-i18n="desc_burger">Classic double patty with melted cheese, lettuce, and secret diner sauce.</p>
                     <div class="menu-price">$12.99</div>
-                    <button class="retro-btn trigger-order" data-item="Retro Burger" data-price="12.99"
-                        data-i18n="add_to_cart" onclick="event.stopPropagation();">Add to Cart</button>
+                    <form method="POST" action="{{ url_for('position', name='Retro Burger') }}" onclick="event.stopPropagation();">
+                        <input type="number" name="num" value="1" min="1" max="10" class="retro-input" style="width: 60px; display: inline-block;">
+                        <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
+                    </form>
                 </div>
             </div>
 
-            <div class="retro-card" onclick="window.location.href='fries-deluxe.html'" style="cursor: pointer;">
-                <img src="/ProyectRestourant/image//fries.jpg"
-                    alt="Diner Fries" class="menu-img">
+            <div class="retro-card menu-link" data-url="{{ url_for('position', name='Classic Diner Fries') }}" style="cursor: pointer;">
+                <div class="menu-img">
+                    <img src="{{ url_for('static', filename='image/fries.jpg') }}" alt="Diner Fries">
+                </div>
                 <div class="menu-item-info">
                     <h3 data-i18n="item_fries">Classic Diner Fries</h3>
-                    <p class="menu-desc" data-i18n="desc_fries">Crispy crinkle-cut fries seasoned with our special retro
-                        spice blend.</p>
+                    <p class="menu-desc" data-i18n="desc_fries">Crispy crinkle-cut fries seasoned with our special retro spice blend.</p>
                     <div class="menu-price">$4.99</div>
-                    <button class="retro-btn trigger-order" data-item="Classic Diner Fries" data-price="4.99"
-                        data-i18n="add_to_cart" onclick="event.stopPropagation();">Add to Cart</button>
+                    <form method="POST" action="{{ url_for('position', name='Classic Diner Fries') }}" onclick="event.stopPropagation();">
+                        <input type="number" name="num" value="1" min="1" max="10" class="retro-input" style="width: 60px; display: inline-block;">
+                        <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
+                    </form>
                 </div>
             </div>
 
-            <div class="retro-card" onclick="window.location.href='milkshake-vintage.html'" style="cursor: pointer;">
-                <img src="/ProyectRestourant/image//milkshake.jpg"
-                    alt="Vintage Milkshake" class="menu-img">
+            <div class="retro-card menu-link" data-url="{{ url_for('position', name='Vintage Milkshake') }}" style="cursor: pointer;">
+                <div class="menu-img">
+                    <img src="{{ url_for('static', filename='image/milkshake.jpg') }}" alt="Vintage Milkshake">
+                </div>
                 <div class="menu-item-info">
                     <h3 data-i18n="item_shake">Vintage Milkshake</h3>
-                    <p class="menu-desc" data-i18n="desc_milkshake">Thick vanilla strawberry shake topped with whipped
-                        cream and a cherry.</p>
+                    <p class="menu-desc" data-i18n="desc_milkshake">Thick vanilla strawberry shake topped with whipped cream and a cherry.</p>
                     <div class="menu-price">$6.50</div>
-                    <button class="retro-btn trigger-order" data-item="Vintage Milkshake" data-price="6.50"
-                        data-i18n="add_to_cart" onclick="event.stopPropagation();">Add to Cart</button>
+                    <form method="POST" action="{{ url_for('position', name='Vintage Milkshake') }}" onclick="event.stopPropagation();">
+                        <input type="number" name="num" value="1" min="1" max="10" class="retro-input" style="width: 60px; display: inline-block;">
+                        <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
+                    </form>
                 </div>
             </div>
 
-            <div class="retro-card" onclick="window.location.href='chicken-wrap.html'" style="cursor: pointer;">
-                <img src="/ProyectRestourant/image//chicken-wrap.jpg"
-                    alt="Chicken Wrap" class="menu-img">
+            <div class="retro-card menu-link" data-url="{{ url_for('position', name='Chicken Wrap') }}" style="cursor: pointer;">
+                <div class="menu-img">
+                    <img src="{{ url_for('static', filename='image/chicken-wrap.jpg') }}" alt="Chicken Wrap">
+                </div>
                 <div class="menu-item-info">
                     <h3 data-i18n="item_wrap">Chicken Wrap</h3>
-                    <p class="menu-desc" data-i18n="desc_wrap">Tender grilled chicken with fresh veggies and garlic
-                        yogurt
-                        sauce.</p>
+                    <p class="menu-desc" data-i18n="desc_wrap">Tender grilled chicken with fresh veggies and garlic yogurt sauce.</p>
                     <div class="menu-price">$11.50</div>
-                    <button class="retro-btn trigger-order" data-item="Chicken Wrap" data-price="11.50"
-                        data-i18n="add_to_cart" onclick="event.stopPropagation();">Add to Cart</button>
+                    <form method="POST" action="{{ url_for('position', name='Chicken Wrap') }}" onclick="event.stopPropagation();">
+                        <input type="number" name="num" value="1" min="1" max="10" class="retro-input" style="width: 60px; display: inline-block;">
+                        <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
+                    </form>
                 </div>
             </div>
 
-            <div class="retro-card" onclick="window.location.href='pizza-classic.html'" style="cursor: pointer;">
-                <img src="/ProyectRestourant/image//pizza.jpg"
-                    alt="Classic Pizza" class="menu-img">
+            <div class="retro-card menu-link" data-url="{{ url_for('position', name='Old School Pizza') }}" style="cursor: pointer;">
+                <div class="menu-img">
+                    <img src="{{ url_for('static', filename='image/pizza.jpg') }}" alt="Classic Pizza">
+                </div>
                 <div class="menu-item-info">
-                    <h3 data-i18n="item_pizza">Classic Pizza</h3>
-                    <p class="menu-desc" data-i18n="desc_pizza">Cheesy pepperoni slice baked in our classic brick oven.
-                    </p>
+                    <h3 data-i18n="item_pizza">Old School Pizza</h3>
+                    <p class="menu-desc" data-i18n="desc_pizza">Cheesy pepperoni slice baked in our classic brick oven.</p>
                     <div class="menu-price">$14.99</div>
-                    <button class="retro-btn trigger-order" data-item="Old School Pizza" data-price="14.99"
-                        data-i18n="add_to_cart" onclick="event.stopPropagation();">Add to Cart</button>
+                    <form method="POST" action="{{ url_for('position', name='Old School Pizza') }}" onclick="event.stopPropagation();">
+                        <input type="number" name="num" value="1" min="1" max="10" class="retro-input" style="width: 60px; display: inline-block;">
+                        <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
+                    </form>
                 </div>
             </div>
 
-            <div class="retro-card" onclick="window.location.href='arcade-nachos.html'" style="cursor: pointer;">
-                <img src="/ProyectRestourant/image//nachos.jpg"
-                    alt="Arcade Nachos" class="menu-img">
+            <div class="retro-card menu-link" data-url="{{ url_for('position', name='Arcade Nachos') }}" style="cursor: pointer;">
+                <div class="menu-img">
+                    <img src="{{ url_for('static', filename='image/nachos.jpg') }}" alt="Arcade Nachos">
+                </div>
                 <div class="menu-item-info">
                     <h3 data-i18n="item_nachos">Arcade Nachos</h3>
-                    <p class="menu-desc" data-i18n="desc_nachos">Loaded corn chips with jalapeños, melted cheese, and
-                        salsa.</p>
+                    <p class="menu-desc" data-i18n="desc_nachos">Loaded corn chips with jalapeños, melted cheese, and salsa.</p>
                     <div class="menu-price">$10.99</div>
-                    <button class="retro-btn trigger-order" data-item="Arcade Nachos" data-price="10.99"
-                        data-i18n="add_to_cart" onclick="event.stopPropagation();">Add to Cart</button>
+                    <form method="POST" action="{{ url_for('position', name='Arcade Nachos') }}" onclick="event.stopPropagation();">
+                        <input type="number" name="num" value="1" min="1" max="10" class="retro-input" style="width: 60px; display: inline-block;">
+                        <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
+                    </form>
                 </div>
             </div>
         </div>
     </main>
+
     <script>
     document.querySelectorAll('.menu-link').forEach(card => {
         card.addEventListener('click', () => {
-            const url = card.dataset.url;
-            window.location.href = url;
+            const url = card.getAttribute('data-url');
+            if (url) window.location.href = url;
         });
     });
     </script>

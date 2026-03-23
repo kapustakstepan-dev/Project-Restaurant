@@ -11,43 +11,86 @@
             background: #fff;
             border: 3px solid var(--text-color);
             border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 6px 6px 0px var(--primary-color);
-            transition: transform 0.2s;
-        }
-
-        .order-card:hover {
-            transform: translate(-2px, -2px);
+            padding: 2rem;
+            margin-bottom: 2rem;
             box-shadow: 8px 8px 0px var(--primary-color);
+            transition: transform 0.2s;
         }
 
         .order-meta {
             display: flex;
             justify-content: space-between;
-            border-bottom: 2px dashed var(--text-color);
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
+            border-bottom: 3px dashed var(--accent-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
             font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .order-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .order-item {
+            background: #f9f9f9;
+            border: 2px solid var(--text-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .order-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: contain;
+            background: #fff;
+            border-bottom: 2px solid var(--text-color);
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        .order-item-name {
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
         }
 
         .empty-orders {
             text-align: center;
-            padding: 3rem;
+            padding: 4rem;
             background: #fff;
-            border: 3px dashed var(--text-color);
-            border-radius: 16px;
+            border: 4px dashed var(--text-color);
+            border-radius: 20px;
+        }
+        .user-info {
+            margin-left: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-family: var(--font-heading);
         }
     </style>
 </head>
 
 <body>
     <nav class="navbar">
-        <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
+        <div style="display: flex; align-items: center;">
+            <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
+            {% if current_user.is_authenticated %}
+                <span class="user-info">{{ current_user.nickname }}</span>
+            {% endif %}
+        </div>
         <ul class="nav-links">
             <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu">Menu</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders" style="color: var(--secondary-color);">My Orders</a></li>
-            <li><a href="{{ url_for('reservation') }}" data-i18n="nav_reserved">Reservation</a></li>
+            <li><a href="{{ url_for('my_reservations') }}" data-i18n="nav_reserved">Reservation</a></li>
+            {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
+            {% endif %}
         </ul>
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="en">EN</button>
@@ -57,30 +100,43 @@
     </nav>
 
     <main class="container">
-        <h1 class="text-primary" data-i18n="orders_title" style="margin-bottom: 2rem;">My Orders</h1>
+        <h1 class="text-primary" style="margin-top: 3rem; margin-bottom: 2.5rem; font-size: 3rem;">Mis Pedidos</h1>
 
         {% if orders %}
             {% for order in orders %}
             <div class="order-card animate-reveal">
                 <div class="order-meta">
-                    <span>ID: #{{ order.id }}</span>
-                    <span class="text-secondary">{{ order.state | capitalize }}</span>
+                    <span>Pedido #{{ order.id }}</span>
+                    <span class="text-secondary" style="background: var(--accent-color); padding: 0.2rem 1rem; border-radius: 20px; border: 2px solid var(--text-color);">
+                        {{ order.state | capitalize }}
+                    </span>
                 </div>
-                <p><strong>Fecha:</strong> {{ order.order_time.strftime("%Y-%m-%d %H:%M") }}</p>
-                <div style="margin-top: 1rem;">
-                    <strong>Artículos:</strong>
-                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
-                        {% for product, quantity in order.order_list.items() %}
-                        <li>{{ product }} x {{ quantity }}</li>
-                        {% endfor %}
-                    </ul>
+                <div style="font-size: 1.1rem; margin-bottom: 2rem;">
+                    <strong>Fecha:</strong> {{ order.order_time.strftime("%Y-%m-%d %H:%M") }}
+                </div>
+                
+                <h3 style="border-bottom: 2px solid var(--text-color); display: inline-block; padding-bottom: 0.3rem;">Productos:</h3>
+                <div class="order-items">
+                    {% for item, qty in order.order_list.items() %}
+                        {% set img_name = 'burger' if item == 'Retro Burger' else 
+                                          'fries' if item == 'Classic Diner Fries' else 
+                                          'milkshake' if item == 'Vintage Milkshake' else 
+                                          'pizza' if item == 'Old School Pizza' else 
+                                          'nachos' if item == 'Arcade Nachos' else 
+                                          'wrap' if item == 'Chicken Wrap' else 'logo' %}
+                        <div class="order-item">
+                            <img src="{{ url_for('static', filename='image/' + img_name + '.jpg') }}" alt="{{ item }}">
+                            <div class="order-item-name">{{ item }}</div>
+                            <div class="text-muted">Cantidad: {{ qty }}</div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
             {% endfor %}
         {% else %}
             <div class="empty-orders">
-                <p style="font-size: 1.5rem; margin-bottom: 1rem;">No tienes pedidos aún.</p>
-                <a href="{{ url_for('menu') }}" class="retro-btn">Explorar Menú</a>
+                <p style="font-size: 2rem; margin-bottom: 2rem; font-family: var(--font-heading);">Aún no tienes pedidos</p>
+                <a href="{{ url_for('menu') }}" class="retro-btn" style="font-size: 1.2rem; padding: 1rem 3rem;">Explorar Menú</a>
             </div>
         {% endif %}
     </main>

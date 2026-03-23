@@ -33,11 +33,17 @@
 </head>
 <body>
     <nav class="navbar">
-        <a href="{{ url_for('home') }}" class="logo">RetroBite Admin</a>
+        <div style="display: flex; align-items: center;">
+            <a href="{{ url_for('home') }}" class="logo">RetroBite Admin</a>
+            {% if current_user.is_authenticated %}
+                <span class="user-info" style="margin-left: 1rem; font-weight: bold; color: var(--primary-color); font-family: var(--font-heading);">{{ current_user.nickname }}</span>
+            {% endif %}
+        </div>
         <ul class="nav-links">
             <li><a href="{{ url_for('menu_check') }}" style="color: var(--secondary-color);">Menu Check</a></li>
             <li><a href="{{ url_for('all_users') }}">All Users</a></li>
             <li><a href="{{ url_for('home') }}">Back to Site</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
         </ul>
     </nav>
 

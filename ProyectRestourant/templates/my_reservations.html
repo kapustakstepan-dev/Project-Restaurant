@@ -14,53 +14,108 @@
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             box-shadow: 6px 6px 0px var(--secondary-color);
+            position: relative;
         }
+
         .empty-state {
             text-align: center;
-            padding: 2rem;
-            border: 2px dashed var(--text-color);
-            border-radius: 12px;
+            padding: 3rem;
+            border: 3px dashed var(--text-color);
+            border-radius: 16px;
             margin-bottom: 2rem;
+            background: #f9f9f9;
+        }
+
+        .delete-form {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .delete-btn {
+            background: #ff4444;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--text-color);
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 2px 2px 0px var(--text-color);
+        }
+
+        .delete-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px var(--text-color);
+        }
+        .user-info {
+            margin-left: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-family: var(--font-heading);
         }
     </style>
 </head>
 
 <body>
     <nav class="navbar">
-        <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
+        <div style="display: flex; align-items: center;">
+            <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
+            {% if current_user.is_authenticated %}
+                <span class="user-info">{{ current_user.nickname }}</span>
+            {% endif %}
+        </div>
         <ul class="nav-links">
             <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu">Menu</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
             <li><a href="{{ url_for('reservation') }}" data-i18n="nav_reserved" style="color: var(--secondary-color);">Reservation</a></li>
+            {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
+            {% endif %}
         </ul>
+        <div class="lang-switcher">
+            <button class="lang-btn" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="es">ES</button>
+            <button class="lang-btn" data-lang="ua">UA</button>
+        </div>
     </nav>
 
     <main class="container animate-reveal">
-        <h1 class="text-primary">Mis Reservas</h1>
-        
+        <h1 class="text-primary" style="margin-top: 3rem; margin-bottom: 2rem;">Mis Reservas</h1>
+
         {% if reservations %}
             {% for res in reservations %}
             <div class="res-card">
                 <p><strong>Fecha/Hora:</strong> {{ res.time_start.strftime("%Y-%m-%d %H:%M") }}</p>
                 <p><strong>Mesa:</strong> {{ res.type_table | capitalize }}</p>
+                
+                <form method="POST" action="{{ url_for('delete_reservation', id=res.id) }}" class="delete-form" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta reserva?');">
+                    <button type="submit" class="delete-btn">Eliminar</button>
+                </form>
             </div>
             {% endfor %}
+
+            <div style="margin-top: 2rem;">
+                <a href="{{ url_for('reservation') }}" class="retro-btn">Reservar más mesas</a>
+            </div>
         {% else %}
             <div class="empty-state">
-                <p>No tienes reservas activas.</p>
-                <a href="{{ url_for('reservation') }}" class="retro-btn">Reservar una mesa</a>
+                <p style="font-size: 1.5rem; margin-bottom: 2rem;">No tienes reservas activas.</p>
+                <a href="{{ url_for('reservation') }}" class="retro-btn">Ir a reservar</a>
             </div>
         {% endif %}
 
-        <hr style="margin: 3rem 0; border: none; border-top: 3px solid var(--text-color);">
-        
-        <h1 class="text-secondary">Mis Pedidos Recientes</h1>
+        <hr style="margin: 4rem 0; border: none; border-top: 3px solid var(--text-color); opacity: 0.2;">
+
+        <h1 class="text-secondary" style="margin-bottom: 2rem;">Mis Pedidos Recientes</h1>
         {% if orders %}
             {% for order in orders %}
             <div class="res-card" style="box-shadow: 6px 6px 0px var(--primary-color);">
                 <p><strong>ID:</strong> #{{ order.id }}</p>
                 <p><strong>Estado:</strong> {{ order.state | capitalize }}</p>
                 <p><strong>Fecha:</strong> {{ order.order_time.strftime("%Y-%m-%d %H:%M") }}</p>
+                <a href="{{ url_for('my_orders') }}" class="text-primary" style="display: inline-block; margin-top: 0.5rem; font-weight: bold;">Ver detalles &rarr;</a>
             </div>
             {% endfor %}
         {% else %}
@@ -71,7 +126,9 @@
         {% endif %}
     </main>
 
+    <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 

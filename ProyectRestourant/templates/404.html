@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 - Página no Encontrada | RetroBite</title>
     <!-- Use relative path to style.css or Flask's url_for -->
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         body {
             display: flex;
@@ -177,7 +177,7 @@
         </a>
     </main>
 
-    <script src="../static/js/translate.js"></script>
+    <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
     <script>
         // Simple particle generator for the 404 page
         const container = document.getElementById('particle-container');

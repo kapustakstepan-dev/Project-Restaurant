@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - All Users | RetroBite</title>
+    <title>Admin</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         .admin-table {
@@ -29,11 +29,17 @@
 </head>
 <body>
     <nav class="navbar">
-        <a href="{{ url_for('home') }}" class="logo">RetroBite Admin</a>
+        <div style="display: flex; align-items: center;">
+            <a href="{{ url_for('home') }}" class="logo">RetroBite Admin</a>
+            {% if current_user.is_authenticated %}
+                <span class="user-info" style="margin-left: 1rem; font-weight: bold; color: var(--primary-color); font-family: var(--font-heading);">{{ current_user.nickname }}</span>
+            {% endif %}
+        </div>
         <ul class="nav-links">
             <li><a href="{{ url_for('menu_check') }}">Menu Check</a></li>
             <li><a href="{{ url_for('all_users') }}" style="color: var(--secondary-color);">All Users</a></li>
             <li><a href="{{ url_for('home') }}">Back to Site</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
         </ul>
     </nav>
 

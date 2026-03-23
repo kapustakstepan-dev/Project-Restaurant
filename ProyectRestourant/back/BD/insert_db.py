@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from online_restaurant_db import engine, Menu
+from online_restaurant_db import Users, engine, Menu
 
 with Session(engine) as session:
     dishes = [
@@ -60,6 +60,14 @@ with Session(engine) as session:
     ]
 
     session.add_all(dishes)
+
+    admin = Users(
+        nickname="admin",
+        email="adminjaj@gmail.com",
+        role="admin"
+    )
+    admin.set_password("qwerty1233")
+    session.add(admin)
     session.commit()
 
 print("Меню успішно додано!")
