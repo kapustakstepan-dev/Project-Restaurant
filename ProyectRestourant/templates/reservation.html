@@ -93,6 +93,31 @@
         </div>
     </main>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const datetimeInput = document.getElementById('datetime');
+            
+            function updateMinDate() {
+                const now = new Date();
+                const offset = now.getTimezoneOffset() * 60000;
+                const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
+                datetimeInput.min = localISOTime;
+            }
+
+            updateMinDate();
+
+            document.getElementById('res-form').addEventListener('submit', function(e) {
+                const selectedDate = new Date(datetimeInput.value);
+                const currentNow = new Date();
+                if (selectedDate < currentNow) {
+                    e.preventDefault();
+                    // Using a simple alert as requested in the guide
+                    alert("Error: No puedes reservar una mesa para una fecha que ya pasó.");
+                }
+            });
+        });
+    </script>
+
     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>

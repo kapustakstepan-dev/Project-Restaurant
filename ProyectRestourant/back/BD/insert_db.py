@@ -60,14 +60,20 @@ with Session(engine) as session:
     ]
 
     session.add_all(dishes)
+    existing_admin = session.query(Users).filter_by(nickname="admin").first()
 
-    admin = Users(
-        nickname="admin",
-        email="adminjaj@gmail.com",
-        role="admin"
-    )
-    admin.set_password("qwerty1233")
-    session.add(admin)
+    if not existing_admin:
+        admin = Users(
+            nickname="admin",
+            email="adminjaj@gmail.com",
+            role="admin"
+        )
+        admin.set_password("qwerty1233")
+        session.add(admin)
+        print("Admin creado")
+    else:
+        print("Admin ya existe")
+    
     session.commit()
 
 print("Меню успішно додано!")

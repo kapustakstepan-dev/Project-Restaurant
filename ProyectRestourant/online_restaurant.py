@@ -148,6 +148,10 @@ def reservation():
         time_start = datetime.strptime(time_start_str, "%Y-%m-%dT%H:%M")
         table_type = request.form['table_type']
 
+        if time_start < datetime.now():
+            flash("No se pueden realizar reservas en el pasado")
+            return redirect(url_for('reservation'))
+
         with Session() as db_session:
             res = Reservation(
                 time_start=time_start,

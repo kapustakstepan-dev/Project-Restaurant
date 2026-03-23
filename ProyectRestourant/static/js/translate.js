@@ -150,7 +150,7 @@ const translations = {
         login_btn: "Увійти",
         register_title: "Приєднуйся до клубу",
         register_btn: "Реєстрація",
-        email_label: "Ім'я користувача",
+        email_label: "Нікнейм",
         password_label: "Пароль",
         name_label: "Повне ім'я",
         invoice_title: "Чек RetroBite",
