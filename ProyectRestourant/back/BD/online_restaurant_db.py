@@ -59,7 +59,7 @@ class Reservation(Base):
 class Orders(Base):
     __tablename__ = 'orders'
     id: Mapped[int] = mapped_column(primary_key=True)
-    order_list: Mapped[Dict] = mapped_column(JSONB)  
+    order_list: Mapped[Dict] = mapped_column(JSONB, default=dict)
     order_time: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     state: Mapped[str] = mapped_column(String(50), default='pending')
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))

@@ -105,10 +105,18 @@
 
         <div class="position-container animate-reveal">
             <div class="position-image">
-                <img src="{{ url_for('static', filename='image/' + position.file_name) }}" alt="{{ position.name }}">
-            </div>
+                {% if position and position.file_name %}
+                    <img src="{{ url_for('static', filename='image/' + position.file_name) }}" alt="{{ position.name }}">
+                {% else %}
+                    <p>No image available</p>
+                {% endif %}       
+                 </div>
+                 
             <div class="position-details">
                 <h1 class="position-title">{{ position.name }}</h1>
+                <p class="position-desc">{{ position.description }}</p>
+                <p class="position-price">${{ position.price }}</p>
+                
                 <div class="position-meta"><span data-i18n="weight_label">Weight</span>: {{ position.weight }}</div>
                 <p class="position-desc">{{ position.description }}</p>
 
@@ -117,7 +125,7 @@
 
                 <div class="position-price">${{ position.price }}</div>
                 
-                <form action="{{ url_for('position', name=position.name) }}" method="POST" class="retro-form" style="max-width: 300px;">
+                <form action="{{ url_for('position', position_id=position.id) }}" method="POST" class="retro-form" style="max-width: 300px;">
                     <div class="form-group" style="display: flex; align-items: center; gap: 1rem;">
                         <label for="num" data-i18n="label_quantity" style="margin: 0;">Quantity:</label>
                         <input type="number" name="num" id="num" value="1" min="1" max="10" class="retro-input" style="width: 80px;">
@@ -129,6 +137,7 @@
             </div>
         </div>
     </main>
+
 
     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/translate.js') }}"></script>

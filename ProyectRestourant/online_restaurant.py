@@ -1,9 +1,11 @@
 import os
 import sys
+import secrets
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
+
 
 from back.BD.online_restaurant_db import Session, Users, Menu, Reservation, Orders, init_db
 
@@ -18,7 +20,7 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
     with Session() as db_session:
-        return db_session.query(Users).get(int(user_id))
+        return db_session.get(Users, int(user_id))
 
 
 @app.route('/')
@@ -49,7 +51,7 @@ def register():
                 flash("Email already registered!")
                 return redirect(url_for('register'))
 
-            user = Users(nickname=nickname, email=email, role='client')
+            user = Users(nickname=nickname, email=email, role='user')
             user.set_password(password)
             
             try:
@@ -91,26 +93,29 @@ def logout():
     flash("You have been logged out")
     return redirect(url_for('login'))
 
-
-@app.route('/position/<name>', methods=['GET', 'POST'])
-def position(name):
+@app.route('/position/<int:position_id>', methods=['GET', 'POST'])
+def position(position_id):
     with Session() as db_session:
-        position = db_session.query(Menu).filter_by(name=name).first()
+        position = db_session.query(Menu).filter_by(id=position_id).first()
+
+    if not position:
+        return "Position not found", 404
+
+    if 'basket' not in session:
+        session['basket'] = {}
+
+    basket = session['basket']
 
     if request.method == 'POST':
-        num = int(request.form.get('num', 1))
-        num = min(num, 10) # Max 10 per product
-        if 'basket' not in session:
-            session['basket'] = {}
-        basket = session['basket']
-        basket[name] = basket.get(name, 0) + num
+        num = int(request.form.get('quantity', 1))
+
+        basket[str(position.id)] = basket.get(str(position.id), 0) + num
         session['basket'] = basket
-        flash(f"Added {num} x {name} to basket!")
-        return redirect(url_for('position', name=name))
 
-    return render_template('position.html', position=position)
+        return redirect(url_for('position', position_id=position_id))
 
-
+    return render_template("position.html", position=position)
+    
 @app.route('/create_order', methods=['GET', 'POST'])
 @login_required
 def create_order():
@@ -130,14 +135,43 @@ def create_order():
         return redirect(url_for('my_orders'))
     return render_template('create_order.html', basket=basket)
 
+@app.route('/add_to_basket/<int:id>', methods=['POST'])
+def add_to_basket(id):
+    num = int(request.form.get('quantity', 1))
+
+    if 'basket' not in session:
+        session['basket'] = {}
+
+    basket = session['basket']
+
+
+    basket[str(id)] = basket.get(str(id), 0) + num
+
+    session['basket'] = basket
+
+    return redirect(url_for('my_orders'))
+
 
 @app.route('/my_orders')
-@login_required
 def my_orders():
-    print("My Orders accessed", file=sys.stderr)
+    basket = session.get('basket', {})
+
+    items = []
+
     with Session() as db_session:
-        orders = db_session.query(Orders).filter_by(user_id=current_user.id).all()
-    return render_template('my_orders.html', orders=orders)
+        for id_str, quantity in basket.items():
+            try:
+                item_id = int(id_str)
+            except ValueError:
+                continue
+            item = db_session.query(Menu).filter_by(id=item_id).first()
+            if item:
+                items.append({
+                    "item": item,
+                    "quantity": quantity
+                })
+
+    return render_template("my_orders.html", items=items)
 
 
 @app.route('/reservation', methods=['GET', 'POST'])
@@ -189,45 +223,60 @@ def delete_reservation(id):
 @app.route('/menu_check', methods=['GET', 'POST'])
 @login_required
 def menu_check():
-    if current_user.nickname != 'Admin':
+
+    if not current_user.is_authenticated or current_user.role != 'admin':
         return redirect(url_for('home'))
 
-    # Initialize CSRF token if not present
+    import secrets
     if 'csrf_token' not in session:
-        import secrets
         session['csrf_token'] = secrets.token_hex(16)
 
     if request.method == 'POST':
         if request.form.get("csrf_token") != session['csrf_token']:
             return "Blocked", 403
 
-        position_id = request.form['pos_id']
-        with Session() as cursor:
-            position = cursor.query(Menu).filter_by(id=position_id).first()
+        position_id = request.form.get('pos_id')
+        if not position_id:
+            return "Bad request", 400
+
+        position_id = int(position_id)
+
+        with Session() as db_session:
+            position = db_session.query(Menu).filter_by(id=position_id).first()
 
             if position:
                 if 'change_status' in request.form:
                     position.active = not position.active
                 elif 'delete_position' in request.form:
-                    cursor.delete(position)
-                cursor.commit()
+                    db_session.delete(position)
 
-    with Session() as cursor:
-        all_positions = cursor.query(Menu).all()
+                db_session.commit()
 
-    return render_template('check_menu.html', all_positions=all_positions, csrf_token=session["csrf_token"])
+    with Session() as db_session:
+        all_positions = db_session.query(Menu).all()
 
+    return render_template('check_menu.html',
+                           all_positions=all_positions,
+                           csrf_token=session["csrf_token"])
 
 @app.route('/all_users')
 @login_required
 def all_users():
-    if current_user.nickname != 'Admin':
+    if not current_user.is_authenticated or current_user.role != 'admin':
         return redirect(url_for('home'))
 
-    with Session() as cursor:
-        all_users_list = cursor.query(Users).all()
+    with Session() as db_session:
+        all_users_list = db_session.query(Users).all()
 
     return render_template('all_users.html', all_users=all_users_list)
+
+@app.route('/admin')
+@login_required
+def admin():
+    if not current_user.is_authenticated or current_user.role != 'admin':
+        return redirect(url_for('home'))
+
+    return render_template('admin.html')
 
 
 @app.errorhandler(404)
@@ -243,4 +292,4 @@ def remove_html(filename):
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    app.run(debug=True, port=5001)

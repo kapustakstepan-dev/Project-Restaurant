@@ -101,6 +101,14 @@
 
     <main class="container">
         <h1 class="text-primary" style="margin-top: 3rem; margin-bottom: 2.5rem; font-size: 3rem;">Mis Pedidos</h1>
+        <h2>My Orders</h2>
+
+            {% for entry in items %}
+                <div>
+                    <h3>{{ entry.item.name }}</h3>
+                    <p>Cantidad: {{ entry.quantity }}</p>
+                </div>
+            {% endfor %}
 
         {% if orders %}
             {% for order in orders %}
@@ -114,10 +122,10 @@
                 <div style="font-size: 1.1rem; margin-bottom: 2rem;">
                     <strong>Fecha:</strong> {{ order.order_time.strftime("%Y-%m-%d %H:%M") }}
                 </div>
-                
+
                 <h3 style="border-bottom: 2px solid var(--text-color); display: inline-block; padding-bottom: 0.3rem;">Productos:</h3>
                 <div class="order-items">
-                    {% for item, qty in order.order_list.items() %}
+                    {% for item, qty in (order.order_list or {}).items() %}
                         {% set img_name = 'burger' if item == 'Retro Burger' else 
                                           'fries' if item == 'Classic Diner Fries' else 
                                           'milkshake' if item == 'Vintage Milkshake' else 
