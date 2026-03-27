@@ -4,95 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ position.name }} | RetroBite</title>
+    <title>{{ position.name }} - RetroBite</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        .position-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 3rem;
-            margin-top: 4rem;
-            align-items: center;
-        }
-
-        .position-image {
-            flex: 1;
-            min-width: 300px;
-            height: 400px;
-            background-color: var(--secondary-color);
-            border: 4px solid var(--text-color);
-            border-radius: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 10px 10px 0px var(--text-color);
-            overflow: hidden;
-        }
-
-        .position-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .position-details {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .position-title {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-            text-shadow: 3px 3px 0px var(--accent-color);
-        }
-
-        .position-meta {
-            font-size: 1.2rem;
-            color: var(--text-color);
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-        }
-
-        .position-desc {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-        }
-
-        .position-price {
-            font-size: 2.5rem;
-            font-family: var(--font-heading);
-            color: var(--secondary-color);
-            margin-bottom: 2rem;
-        }
-        .user-info {
-            margin-left: 1rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            font-family: var(--font-heading);
-        }
-    </style>
 </head>
 
 <body>
     <nav class="navbar">
-        <div style="display: flex; align-items: center;">
+        <div class="nav-brand">
             <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
             {% if current_user.is_authenticated %}
-                <span class="user-info">{{ current_user.nickname }}</span>
+            <span class="user-info">{{ current_user.nickname }}</span>
             {% endif %}
         </div>
+
         <ul class="nav-links">
-            <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu" style="color: var(--secondary-color);">Menu</a></li>
+            <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu" class="active-link">Menu</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
             <li><a href="{{ url_for('my_reservations') }}" data-i18n="nav_reserved">Reservation</a></li>
             {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
+            <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
             {% else %}
-                <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
+            <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
             {% endif %}
         </ul>
+
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="en">EN</button>
             <button class="lang-btn" data-lang="es">ES</button>
@@ -101,47 +36,58 @@
     </nav>
 
     <main class="container">
-        <a href="{{ url_for('menu') }}" class="retro-btn" style="margin-top: 2rem;">&larr; <span data-i18n="back_to_menu">Back to Menu</span></a>
+        <a href="{{ url_for('menu') }}" class="retro-btn back-btn" data-i18n="back_to_menu">
+            &larr; Back to Menu
+        </a>
 
         <div class="position-container animate-reveal">
             <div class="position-image">
                 {% if position and position.file_name %}
-                    <img src="{{ url_for('static', filename='image/' + position.file_name) }}" alt="{{ position.name }}">
+                <img src="{{ url_for('static', filename='image/' + position.file_name) }}" alt="{{ position.name }}">
                 {% else %}
-                    <p>No image available</p>
-                {% endif %}       
-                 </div>
-                 
+                <p class="placeholder-text">No image available</p>
+                {% endif %}
+            </div>
+
             <div class="position-details">
                 <h1 class="position-title">{{ position.name }}</h1>
-                <p class="position-desc">{{ position.description }}</p>
-                <p class="position-price">${{ position.price }}</p>
-                
-                <div class="position-meta"><span data-i18n="weight_label">Weight</span>: {{ position.weight }}</div>
-                <p class="position-desc">{{ position.description }}</p>
 
-                <h3 style="margin-bottom: 0.5rem;" data-i18n="ingredients_label">Ingredients:</h3>
-                <p style="line-height: 1.6; margin-bottom: 2rem;">{{ position.ingredients }}</p>
+                <div class="position-info-block">
+                    <p class="position-meta">
+                        <span data-i18n="weight_label">Weight</span>: {{ position.weight }}
+                    </p>
+                    <p class="position-price">${{ position.price }}</p>
+                </div>
 
-                <div class="position-price">${{ position.price }}</div>
-                
-                <form action="{{ url_for('position', position_id=position.id) }}" method="POST" class="retro-form" style="max-width: 300px;">
-                    <div class="form-group" style="display: flex; align-items: center; gap: 1rem;">
-                        <label for="num" data-i18n="label_quantity" style="margin: 0;">Quantity:</label>
-                        <input type="number" name="num" id="num" value="1" min="1" max="10" class="retro-input" style="width: 80px;">
+                <div class="position-description">
+                    <h3 data-i18n="description_label">Description:</h3>
+                    <p>{{ position.description }}</p>
+                </div>
+
+                <div class="position-ingredients">
+                    <h3 data-i18n="ingredients_label">Ingredients:</h3>
+                    <p>{{ position.ingredients }}</p>
+                </div>
+
+                <form action="{{ url_for('position', position_id=position.id) }}" method="POST" class="add-to-cart-standalone">
+                    <div class="form-group inline-group">
+                        <label for="quantity" data-i18n="label_quantity">Quantity:</label>
+                        <input type="number" name="quantity" id="quantity" value="1" min="1" max="10" class="retro-input quantity-input">
                     </div>
-                    <button type="submit" class="retro-btn" style="font-size: 1.3rem; padding: 1rem 2rem; width: 100%;">
-                        <span data-i18n="add_to_cart">Add to Cart</span>
+                    
+                    <button type="submit" class="retro-btn full-width-btn" data-i18n="add_to_cart">
+                        Add to Cart
                     </button>
                 </form>
             </div>
         </div>
     </main>
 
-
+    <!-- Scripts -->
     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
+
 </html>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RetroBite | Menu</title>
+    <title>Menu - RetroBite</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         .menu-grid {
@@ -52,33 +52,29 @@
             opacity: 0.8;
             min-height: 45px;
         }
-        .user-info {
-            margin-left: 1rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            font-family: var(--font-heading);
-        }
     </style>
 </head>
 
 <body>
     <nav class="navbar">
-        <div style="display: flex; align-items: center;">
+        <div class="nav-brand">
             <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
             {% if current_user.is_authenticated %}
-                <span class="user-info">{{ current_user.nickname }}</span>
+            <span class="user-info">{{ current_user.nickname }}</span>
             {% endif %}
         </div>
+
         <ul class="nav-links">
-            <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu" style="color: var(--secondary-color);">Menu</a></li>
+            <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu" class="active-link">Menu</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
             <li><a href="{{ url_for('my_reservations') }}" data-i18n="nav_reserved">Reservation</a></li>
             {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
+            <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
             {% else %}
-                <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
+            <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
             {% endif %}
         </ul>
+
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="en">EN</button>
             <button class="lang-btn" data-lang="es">ES</button>
@@ -87,10 +83,11 @@
     </nav>
 
     <main class="container animate-reveal">
-        <h1 data-i18n="menu_title" style="text-align: center; font-size: 3rem; text-shadow: 3px 3px 0px var(--accent-color);">Food From The Past</h1>
+        <h1 data-i18n="menu_title" class="page-title">Food From The Past</h1>
 
         <div class="menu-grid">
-            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=6) }}" style="cursor: pointer;">
+            <!-- Item: Retro Burger -->
+            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=6) }}">
                 <div class="menu-img">
                     <img src="{{ url_for('static', filename='image/burger.jpg') }}" alt="Retro Burger">
                 </div>
@@ -98,14 +95,16 @@
                     <h3 data-i18n="item_burger">Retro Burger</h3>
                     <p class="menu-desc" data-i18n="desc_burger">Classic double patty with melted cheese, lettuce, and secret diner sauce.</p>
                     <div class="menu-price">$12.99</div>
-                    <form method="POST" action="{{ url_for('position', position_id=6) }}" onclick="event.stopPropagation();">
-                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input" style="width: 60px; display: inline-block;">
+                    
+                    <form method="POST" action="{{ url_for('position', position_id=6) }}" class="add-to-cart-form">
+                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
                     </form>
                 </div>
             </div>
 
-            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=2) }}" style="cursor: pointer;">
+            <!-- Item: Crispy Fries -->
+            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=2) }}">
                 <div class="menu-img">
                     <img src="{{ url_for('static', filename='image/fries.jpg') }}" alt="Crispy Fries">
                 </div>
@@ -113,14 +112,16 @@
                     <h3 data-i18n="item_fries">Classic Crispy Fries</h3>
                     <p class="menu-desc" data-i18n="desc_fries">Crispy crinkle-cut fries seasoned with our special retro spice blend.</p>
                     <div class="menu-price">$4.99</div>
-                    <form method="POST" action="{{ url_for('position', position_id=2) }}" onclick="event.stopPropagation();">
-                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input" style="width: 60px; display: inline-block;">
+                    
+                    <form method="POST" action="{{ url_for('position', position_id=2) }}" class="add-to-cart-form">
+                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
                     </form>
                 </div>
             </div>
 
-            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=4) }}" style="cursor: pointer;">
+            <!-- Item: Vintage Milkshake -->
+            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=4) }}">
                 <div class="menu-img">
                     <img src="{{ url_for('static', filename='image/milkshake.jpg') }}" alt="Vintage Milkshake">
                 </div>
@@ -128,14 +129,16 @@
                     <h3 data-i18n="item_shake">Vintage Milkshake</h3>
                     <p class="menu-desc" data-i18n="desc_milkshake">Thick vanilla strawberry shake topped with whipped cream and a cherry.</p>
                     <div class="menu-price">$6.50</div>
-                    <form method="POST" action="{{ url_for('position', position_id=4) }}" onclick="event.stopPropagation();">
-                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input" style="width: 60px; display: inline-block;">
+                    
+                    <form method="POST" action="{{ url_for('position', position_id=4) }}" class="add-to-cart-form">
+                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
                     </form>
                 </div>
             </div>
 
-            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=2) }}" style="cursor: pointer;">
+            <!-- Item: Chicken Wrap -->
+            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=2) }}">
                 <div class="menu-img">
                     <img src="{{ url_for('static', filename='image/wrap.jpg') }}" alt="Chicken Wrap">
                 </div>
@@ -143,14 +146,16 @@
                     <h3 data-i18n="item_wrap">Chicken Wrap</h3>
                     <p class="menu-desc" data-i18n="desc_wrap">Tender grilled chicken with fresh veggies and garlic yogurt sauce.</p>
                     <div class="menu-price">$11.50</div>
-                    <form method="POST" action="{{ url_for('position', position_id=2) }}" onclick="event.stopPropagation();">
-                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input" style="width: 60px; display: inline-block;">
+                    
+                    <form method="POST" action="{{ url_for('position', position_id=2) }}" class="add-to-cart-form">
+                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
                     </form>
                 </div>
             </div>
 
-            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=5) }}" style="cursor: pointer;">
+            <!-- Item: Old School Pizza -->
+            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=5) }}">
                 <div class="menu-img">
                     <img src="{{ url_for('static', filename='image/pizza.jpg') }}" alt="Classic Pizza">
                 </div>
@@ -158,14 +163,16 @@
                     <h3 data-i18n="item_pizza">Old School Pizza</h3>
                     <p class="menu-desc" data-i18n="desc_pizza">Cheesy pepperoni slice baked in our classic brick oven.</p>
                     <div class="menu-price">$14.99</div>
-                    <form method="POST" action="{{ url_for('position', position_id=5) }}" onclick="event.stopPropagation();">
-                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input" style="width: 60px; display: inline-block;">
+                    
+                    <form method="POST" action="{{ url_for('position', position_id=5) }}" class="add-to-cart-form">
+                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
                     </form>
                 </div>
             </div>
 
-            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=1) }}" style="cursor: pointer;">
+            <!-- Item: Arcade Nachos -->
+            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=1) }}">
                 <div class="menu-img">
                     <img src="{{ url_for('static', filename='image/nachos.jpg') }}" alt="Arcade Nachos">
                 </div>
@@ -173,8 +180,9 @@
                     <h3 data-i18n="item_nachos">Arcade Nachos</h3>
                     <p class="menu-desc" data-i18n="desc_nachos">Loaded corn chips with jalapeños, melted cheese, and salsa.</p>
                     <div class="menu-price">$10.99</div>
-                    <form method="POST" action="{{ url_for('position', position_id=1) }}" onclick="event.stopPropagation();">
-                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input" style="width: 60px; display: inline-block;">
+                    
+                    <form method="POST" action="{{ url_for('position', position_id=1) }}" class="add-to-cart-form">
+                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
                     </form>
                 </div>
@@ -182,13 +190,20 @@
         </div>
     </main>
 
+    <!-- Scripts -->
     <script>
-    document.querySelectorAll('.menu-link').forEach(card => {
-        card.addEventListener('click', () => {
-            const url = card.getAttribute('data-url');
-            if (url) window.location.href = url;
+        document.querySelectorAll('.menu-link').forEach(card => {
+            card.addEventListener('click', () => {
+                const url = card.getAttribute('data-url');
+                if (url) window.location.href = url;
+            });
         });
-    });
+
+        document.querySelectorAll('.add-to-cart-form').forEach(form => {
+            form.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        });
     </script>
 
     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
@@ -196,7 +211,7 @@
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
     <script src="{{ url_for('static', filename='js/invoice.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
 </body>
 
 </html>
+>

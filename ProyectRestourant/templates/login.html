@@ -4,21 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login - RetroBite</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
-
 <body>
     <nav class="navbar">
-        <div style="display: flex; align-items: center;">
+        <div class="nav-brand">
             <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
             {% if current_user.is_authenticated %}
-            <span class="user-info"
-                style="margin-left: 1rem; font-weight: bold; color: var(--primary-color); font-family: var(--font-heading);">{{
-                current_user.nickname }}</span>
+            <span class="user-info">{{ current_user.nickname }}</span>
             {% endif %}
         </div>
+
         <ul class="nav-links">
             <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu">Menu</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
@@ -29,6 +27,7 @@
             <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
             {% endif %}
         </ul>
+
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="en">EN</button>
             <button class="lang-btn" data-lang="es">ES</button>
@@ -38,33 +37,36 @@
 
     <main class="container">
         <div class="retro-form animate-reveal">
-            <h2 data-i18n="login_title" style="text-align: center; margin-bottom: 2rem; color: var(--primary-color);">
-                Welcome Back</h2>
+            <h2 data-i18n="login_title" class="form-title">Welcome Back</h2>
+
             <form action="{{ url_for('login') }}" method="POST">
                 <div class="form-group">
-                    <label for="email" data-i18n="email_label">Nickname</label>
-                    <input type="text" id="email" class="retro-input" name="username" required>
+                    <label for="username" data-i18n="email_label">Nickname</label>
+                    <input type="text" id="username" name="username" class="retro-input" required>
                 </div>
+
                 <div class="form-group">
                     <label for="password" data-i18n="password_label">Password</label>
-                    <input type="password" id="password" class="retro-input" name="password" required>
+                    <input type="password" id="password" name="password" class="retro-input" required>
                 </div>
-                <button type="submit" class="retro-btn" style="width: 100%; margin-top: 1rem;"
-                    data-i18n="login_btn">Login</button>
+
+                <button type="submit" class="retro-btn full-width" data-i18n="login_btn">
+                    Login
+                </button>
             </form>
-            <p style="text-align: center; margin-top: 1.5rem;">
-                Don't have an account? <a href="{{ url_for('register') }}"
-                    style="color: var(--secondary-color); font-weight: bold;">Register</a>
+
+            <p class="form-footer">
+                Don't have an account? 
+                <a href="{{ url_for('register') }}" class="highlight-link">Register</a>
             </p>
         </div>
     </main>
 
+    <!-- Scripts -->
     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
-
 </body>
 
 </html>

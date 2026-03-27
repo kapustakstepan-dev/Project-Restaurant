@@ -4,29 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-
+    <title>Home - RetroBite</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
     <nav class="navbar">
-        <div style="display: flex; align-items: center;">
+        <div class="nav-brand">
             <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
             {% if current_user.is_authenticated %}
-                <span class="user-info" style="margin-left: 1rem; font-weight: bold; color: var(--primary-color); font-family: var(--font-heading);">{{ current_user.nickname }}</span>
+            <span class="user-info">{{ current_user.nickname }}</span>
             {% endif %}
         </div>
+
         <ul class="nav-links">
             <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu">Menu</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
             <li><a href="{{ url_for('my_reservations') }}" data-i18n="nav_reserved">Reservation</a></li>
             {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
+            <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
             {% else %}
-                <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
+            <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
             {% endif %}
         </ul>
+
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="en">EN</button>
             <button class="lang-btn" data-lang="es">ES</button>
@@ -34,25 +35,21 @@
         </div>
     </nav>
 
-
     <main class="container">
-        <div style="text-align: center; margin-top: 10vh; max-width: 800px; margin-left: auto; margin-right: auto;"
-            class="animate-reveal">
-            <h1 data-i18n="hero_title"
-                style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1.5rem; text-shadow: 4px 4px 0px var(--accent-color);">
+        <div class="hero-section animate-reveal">
+            <h1 data-i18n="hero_title" class="hero-title">
                 Welcome to RetroBite
             </h1>
-            <p data-i18n="hero_subtitle"
-                style="font-size: 1.5rem; margin-bottom: 3rem; line-height: 1.6; font-weight: 500;">
+            <p data-i18n="hero_subtitle" class="hero-subtitle">
                 Taste the nostalgic flavors of the past, served with a modern twist.
             </p>
-            <a href="{{ url_for('menu') }}" class="retro-btn" data-i18n="hero_cta"
-                style="font-size: 1.3rem; padding: 1rem 3rem;">View Menu</a>
+            <a href="{{ url_for('menu') }}" class="retro-btn hero-cta" data-i18n="hero_cta">
+                View Menu
+            </a>
         </div>
     </main>
 
-
-
+    <!-- Scripts -->
     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>

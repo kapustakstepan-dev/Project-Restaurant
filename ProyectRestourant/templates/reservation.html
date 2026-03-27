@@ -4,53 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservation</title>
+    <title>Book a Table - RetroBite</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        .reservation-content {
-            max-width: 600px;
-            margin: 3rem auto;
-            text-align: center;
-        }
-
-        .reservation-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            text-align: left;
-        }
-
-        .full-width {
-            grid-column: span 2;
-        }
-        .user-info {
-            margin-left: 1rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            font-family: var(--font-heading);
-        }
-    </style>
 </head>
 
 <body>
-
     <nav class="navbar">
-        <div style="display: flex; align-items: center;">
+        <div class="nav-brand">
             <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
             {% if current_user.is_authenticated %}
-                <span class="user-info">{{ current_user.nickname }}</span>
+            <span class="user-info">{{ current_user.nickname }}</span>
             {% endif %}
         </div>
+
         <ul class="nav-links">
             <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu">Menu</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
-            <li><a href="{{ url_for('my_reservations') }}" data-i18n="nav_reserved" style="color: var(--secondary-color);">Reservation</a></li>
+            <li><a href="{{ url_for('my_reservations') }}" data-i18n="nav_reserved" class="active-link">Reservation</a></li>
             {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
+            <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
             {% else %}
-                <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
+            <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
             {% endif %}
         </ul>
+
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="en">EN</button>
             <button class="lang-btn" data-lang="es">ES</button>
@@ -58,22 +35,19 @@
         </div>
     </nav>
 
-    <main class="container animate-reveal">
-        <div class="reservation-content">
-            <h1 data-i18n="res_title"
-                style="font-size: 3rem; margin-bottom: 1rem; text-shadow: 3px 3px 0px var(--accent-color);">
-                Book a Table
-            </h1>
-            <p data-i18n="res_subtitle" style="margin-bottom: 3rem; font-size: 1.1rem;">
+    <main class="container">
+        <div class="reservation-content animate-reveal">
+            <h1 class="page-title" data-i18n="res_title">Book a Table</h1>
+            <p class="section-subtitle" data-i18n="res_subtitle">
                 Experience nostalgic dining at its best. Secure your spot today!
             </p>
 
-            <form id="res-form" method="POST" action="{{ url_for('reservation') }}" class="retro-form reservation-form">
+            <form id="res-form" method="POST" action="{{ url_for('reservation') }}" class="retro-form reservation-grid-form">
                 <div class="form-group full-width">
                     <label for="datetime" data-i18n="label_date">Date & Time</label>
                     <input type="datetime-local" id="datetime" name="datetime" class="retro-input" required>
                 </div>
-                
+
                 <div class="form-group full-width">
                     <label for="table_type" data-i18n="label_guests">Table Type / Guests</label>
                     <select id="table_type" name="table_type" class="retro-input" required>
@@ -83,9 +57,8 @@
                     </select>
                 </div>
 
-                <div class="full-width" style="text-align: center; margin-top: 1rem;">
-                    <button type="submit" class="retro-btn" style="width: 100%; font-size: 1.2rem;"
-                        data-i18n="btn_reserve">
+                <div class="form-actions full-width">
+                    <button type="submit" class="retro-btn submit-btn" data-i18n="btn_reserve">
                         Confirm Reservation
                     </button>
                 </div>
@@ -93,10 +66,16 @@
         </div>
     </main>
 
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const datetimeInput = document.getElementById('datetime');
-            
+
             function updateMinDate() {
                 const now = new Date();
                 const offset = now.getTimezoneOffset() * 60000;
@@ -106,22 +85,18 @@
 
             updateMinDate();
 
-            document.getElementById('res-form').addEventListener('submit', function(e) {
+            document.getElementById('res-form').addEventListener('submit', function (e) {
                 const selectedDate = new Date(datetimeInput.value);
                 const currentNow = new Date();
                 if (selectedDate < currentNow) {
                     e.preventDefault();
-                    // Using a simple alert as requested in the guide
                     alert("Error: No puedes reservar una mesa para una fecha que ya pasó.");
                 }
             });
         });
     </script>
-
-    <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
+
+</html>
 
 </html>

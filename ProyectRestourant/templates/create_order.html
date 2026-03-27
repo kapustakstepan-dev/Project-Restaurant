@@ -1,116 +1,64 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Оформлення замовлення</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            background: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .order-container {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-        }
-
-        h2 {
-            color: #2c3e50;
-            text-align: center;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        li {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px dashed #ccc;
-        }
-
-        .empty-msg {
-            text-align: center;
-            color: #7f8c8d;
-        }
-
-        .btn-confirm {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background: #27ae60;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background 0.3s;
-        }
-
-        .btn-confirm:hover {
-            background: #219150;
-        }
-
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            color: #3498db;
-            text-decoration: none;
-        }
-    </style>
+    <title>Checkout - RetroBite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
-
-    <div class="order-container">
-        <h2>🛒 Ваше замовлення</h2>
-
-        {% if basket %}
-        <ul>
-            {% for position, count in basket.items() %}
-            <li>
-                <span><strong>{{ position }}</strong></span>
-                <span>x{{ count }} шт.</span>
-            </li>
-            {% endfor %}
-        </ul>
-
-        <form method="post">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-
-            <button type="submit" class="btn-confirm">Підтвердити та замовити</button>
-        </form>
-        {% else %}
-        <div class="empty-msg">
-            <p>Ваш список замовлень порожній</p>
-            <a href="{{ url_for('menu') }}" class="back-link">Повернутися до меню</a>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
         </div>
-        {% endif %}
+        <ul class="nav-links">
+            <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu">Menu</a></li>
+            <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
+        </ul>
+    </nav>
 
-        <a href="{{ url_for('menu') }}" class="back-link">← Додати ще щось</a>
-    </div>
+    <main class="container">
+        <div class="retro-form animate-reveal" style="max-width: 600px;">
+            <h1 class="form-title" data-i18n="checkout_title">🛒 Checkout</h1>
 
+            {% if basket %}
+            <div class="checkout-summary">
+                <ul class="order-list-summary">
+                    {% for position, count in basket.items() %}
+                    <li class="order-summary-item">
+                        <span class="item-name"><strong>{{ position }}</strong></span>
+                        <span class="item-qty">x{{ count }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <form method="post" class="checkout-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button type="submit" class="retro-btn full-width" data-i18n="btn_confirm_order" style="margin-top: 2rem;">
+                        Confirm & Order
+                    </button>
+                </form>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <p data-i18n="empty_basket_checkout">Your basket is empty.</p>
+                <a href="{{ url_for('menu') }}" class="retro-btn" data-i18n="back_to_menu">Back to Menu</a>
+            </div>
+            {% endif %}
+
+            <div class="form-footer">
+                <a href="{{ url_for('menu') }}" class="highlight-link">&larr; Add more items</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/invoice.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
 </body>
 
 </html>

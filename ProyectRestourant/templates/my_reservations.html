@@ -4,76 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Reservations | RetroBite</title>
+    <title>My Reservations - RetroBite</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        .res-card {
-            background: #fff;
-            border: 3px solid var(--text-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 6px 6px 0px var(--secondary-color);
-            position: relative;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            border: 3px dashed var(--text-color);
-            border-radius: 16px;
-            margin-bottom: 2rem;
-            background: #f9f9f9;
-        }
-
-        .delete-form {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-        }
-
-        .delete-btn {
-            background: #ff4444;
-            color: #fff;
-            padding: 0.5rem 1rem;
-            border: 2px solid var(--text-color);
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 2px 2px 0px var(--text-color);
-        }
-
-        .delete-btn:hover {
-            transform: translate(-1px, -1px);
-            box-shadow: 3px 3px 0px var(--text-color);
-        }
-        .user-info {
-            margin-left: 1rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            font-family: var(--font-heading);
-        }
-    </style>
 </head>
 
 <body>
     <nav class="navbar">
-        <div style="display: flex; align-items: center;">
+        <div class="nav-brand">
             <a href="{{ url_for('home') }}" class="logo">RetroBite</a>
             {% if current_user.is_authenticated %}
-                <span class="user-info">{{ current_user.nickname }}</span>
+            <span class="user-info">{{ current_user.nickname }}</span>
             {% endif %}
         </div>
+
         <ul class="nav-links">
             <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu">Menu</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
-            <li><a href="{{ url_for('reservation') }}" data-i18n="nav_reserved" style="color: var(--secondary-color);">Reservation</a></li>
+            <li><a href="{{ url_for('my_reservations') }}" data-i18n="nav_reserved" class="active-link">Reservation</a></li>
             {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
+            <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
             {% else %}
-                <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
+            <li><a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a></li>
             {% endif %}
         </ul>
+
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="en">EN</button>
             <button class="lang-btn" data-lang="es">ES</button>
@@ -81,51 +35,68 @@
         </div>
     </nav>
 
-    <main class="container animate-reveal">
-        <h1 class="text-primary" style="margin-top: 3rem; margin-bottom: 2rem;">Mis Reservas</h1>
+    <main class="container">
+        <h1 class="page-title" data-i18n="my_reservations_title">My Reservations</h1>
 
-        {% if reservations %}
-            {% for res in reservations %}
-            <div class="res-card">
-                <p><strong>Fecha/Hora:</strong> {{ res.time_start.strftime("%Y-%m-%d %H:%M") }}</p>
-                <p><strong>Mesa:</strong> {{ res.type_table | capitalize }}</p>
-                
-                <form method="POST" action="{{ url_for('delete_reservation', id=res.id) }}" class="delete-form" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta reserva?');">
-                    <button type="submit" class="delete-btn">Eliminar</button>
-                </form>
+        <section class="reservations-section animate-reveal">
+            {% if reservations %}
+            <div class="res-grid">
+                {% for res in reservations %}
+                <div class="retro-card res-card">
+                    <div class="res-info">
+                        <p><strong>Fecha/Hora:</strong> {{ res.time_start.strftime("%Y-%m-%d %H:%M") }}</p>
+                        <p><strong>Mesa:</strong> {{ res.type_table | capitalize }}</p>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('delete_reservation', id=res.id) }}" class="delete-form"
+                        onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta reserva?');">
+                        <button type="submit" class="retro-btn delete-btn">Eliminar</button>
+                    </form>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
 
-            <div style="margin-top: 2rem;">
+            <div class="section-actions">
                 <a href="{{ url_for('reservation') }}" class="retro-btn">Reservar más mesas</a>
             </div>
-        {% else %}
+            {% else %}
             <div class="empty-state">
-                <p style="font-size: 1.5rem; margin-bottom: 2rem;">No tienes reservas activas.</p>
+                <p data-i18n="no_active_reservations">No tienes reservas activas.</p>
                 <a href="{{ url_for('reservation') }}" class="retro-btn">Ir a reservar</a>
             </div>
-        {% endif %}
+            {% endif %}
+        </section>
 
-        <hr style="margin: 4rem 0; border: none; border-top: 3px solid var(--text-color); opacity: 0.2;">
+        <hr class="section-divider">
 
-        <h1 class="text-secondary" style="margin-bottom: 2rem;">Mis Pedidos Recientes</h1>
-        {% if orders %}
-            {% for order in orders %}
-            <div class="res-card" style="box-shadow: 6px 6px 0px var(--primary-color);">
-                <p><strong>ID:</strong> #{{ order.id }}</p>
-                <p><strong>Estado:</strong> {{ order.state | capitalize }}</p>
-                <p><strong>Fecha:</strong> {{ order.order_time.strftime("%Y-%m-%d %H:%M") }}</p>
-                <a href="{{ url_for('my_orders') }}" class="text-primary" style="display: inline-block; margin-top: 0.5rem; font-weight: bold;">Ver detalles &rarr;</a>
+        <h2 class="section-title" data-i18n="recent_orders_title">Recent Orders</h2>
+        
+        <section class="orders-section animate-reveal">
+            {% if orders %}
+            <div class="orders-grid">
+                {% for order in orders %}
+                <div class="retro-card order-summary-card">
+                    <div class="order-summary-header">
+                        <p class="order-id"><strong>ID:</strong> #{{ order.id }}</p>
+                        <span class="order-status-badge">{{ order.state | capitalize }}</span>
+                    </div>
+                    <div class="order-summary-details">
+                        <p><strong>Fecha:</strong> {{ order.order_time.strftime("%Y-%m-%d %H:%M") }}</p>
+                    </div>
+                    <a href="{{ url_for('my_orders') }}" class="highlight-link">Ver detalles &rarr;</a>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        {% else %}
+            {% else %}
             <div class="empty-state">
-                <p>No tienes pedidos recientes.</p>
+                <p data-i18n="no_recent_orders">No tienes pedidos recientes.</p>
                 <a href="{{ url_for('menu') }}" class="retro-btn">Ver Menú</a>
             </div>
-        {% endif %}
+            {% endif %}
+        </section>
     </main>
 
+    <!-- Scripts -->
     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>

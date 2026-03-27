@@ -1,46 +1,24 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Check Menu</title>
+    <title>Menu Management - Admin Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 2rem;
-            background: #fff;
-            border: 3px solid var(--text-color);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 6px 6px 0px var(--text-color);
-        }
-        .admin-table th, .admin-table td {
-            padding: 1rem;
-            border: 2px solid var(--text-color);
-            text-align: left;
-        }
-        .admin-table th {
-            background-color: var(--accent-color);
-            font-family: var(--font-heading);
-        }
-        .status-active { color: green; font-weight: bold; }
-        .status-inactive { color: red; font-weight: bold; }
-        .admin-actions { display: flex; gap: 0.5rem; }
-        .btn-small { padding: 0.4rem 0.8rem; font-size: 0.9rem; }
-    </style>
 </head>
-<body>
+
+<body class="admin-body">
     <nav class="navbar">
-        <div style="display: flex; align-items: center;">
+        <div class="nav-brand">
             <a href="{{ url_for('home') }}" class="logo">RetroBite Admin</a>
             {% if current_user.is_authenticated %}
-                <span class="user-info" style="margin-left: 1rem; font-weight: bold; color: var(--primary-color); font-family: var(--font-heading);">{{ current_user.nickname }}</span>
+            <span class="user-info">{{ current_user.nickname }}</span>
             {% endif %}
         </div>
+
         <ul class="nav-links">
-            <li><a href="{{ url_for('menu_check') }}" style="color: var(--secondary-color);">Menu Check</a></li>
+            <li><a href="{{ url_for('menu_check') }}" class="active-link">Menu Check</a></li>
             <li><a href="{{ url_for('all_users') }}">All Users</a></li>
             <li><a href="{{ url_for('home') }}">Back to Site</a></li>
             <li><a href="{{ url_for('logout') }}">Logout</a></li>
@@ -48,43 +26,49 @@
     </nav>
 
     <main class="container">
-        <h1 class="text-primary">Menu Management</h1>
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for pos in all_positions %}
-                <tr>
-                    <td>{{ pos.id }}</td>
-                    <td>{{ pos.name }}</td>
-                    <td>${{ pos.price }}</td>
-                    <td>
-                        <span class="{{ 'status-active' if pos.active else 'status-inactive' }}">
-                            {{ 'Active' if pos.active else 'Inactive' }}
-                        </span>
-                    </td>
-                    <td class="admin-actions">
-                        <form method="POST">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                            <input type="hidden" name="pos_id" value="{{ pos.id }}">
-                            <button type="submit" name="change_status" class="retro-btn btn-small">Toggle Status</button>
-                            <button type="submit" name="delete_position" class="retro-btn btn-small" style="--primary-color: #ff4444; border-color: #ff4444; box-shadow: 2px 2px 0px #ff4444;">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <h1 class="page-title">Menu Management</h1>
+
+        <div class="admin-table-container animate-reveal">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pos in items %}
+                    <tr>
+                        <td>{{ pos.id }}</td>
+                        <td class="item-name-cell">{{ pos.name }}</td>
+                        <td>${{ pos.price }}</td>
+                        <td>
+                            <span class="status-badge {{ 'status-active' if pos.active else 'status-inactive' }}">
+                                {{ 'Active' if pos.active else 'Inactive' }}
+                            </span>
+                        </td>
+                        <td class="admin-actions">
+                            <form method="POST" class="inline-actions-form">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                <input type="hidden" name="pos_id" value="{{ pos.id }}">
+                                <button type="submit" name="change_status" class="retro-btn btn-small">Toggle Status</button>
+                                <button type="submit" name="delete_position" class="retro-btn btn-small delete-action" 
+                                    onsubmit="return confirm('Confirm delete?');">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </main>
 
+    <!-- Scripts -->
     <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
+
 </html>

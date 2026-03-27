@@ -1,15 +1,13 @@
 import os
-import sys
 import secrets
+from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from datetime import datetime
 from sqlalchemy.exc import IntegrityError
-
 
 from back.BD.online_restaurant_db import Session, Users, Menu, Reservation, Orders, init_db
 
-app =Flask(__name__)
+app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'secret-key')
 
 login_manager = LoginManager()
@@ -27,6 +25,7 @@ def load_user(user_id):
 @app.route('/home')
 def home():
     return render_template('home.html')
+
 
 @app.route('/menu')
 def menu():
@@ -46,14 +45,14 @@ def register():
             if db_session.query(Users).filter_by(nickname=nickname).first():
                 flash("Username already exists!")
                 return redirect(url_for('register'))
-            
+
             if db_session.query(Users).filter_by(email=email).first():
                 flash("Email already registered!")
                 return redirect(url_for('register'))
 
             user = Users(nickname=nickname, email=email, role='user')
             user.set_password(password)
-            
+
             try:
                 db_session.add(user)
                 db_session.commit()
@@ -93,12 +92,13 @@ def logout():
     flash("You have been logged out")
     return redirect(url_for('login'))
 
+
 @app.route('/position/<int:position_id>', methods=['GET', 'POST'])
 def position(position_id):
     with Session() as db_session:
-        position = db_session.query(Menu).filter_by(id=position_id).first()
+        pos = db_session.query(Menu).filter_by(id=position_id).first()
 
-    if not position:
+    if not pos:
         return "Position not found", 404
 
     if 'basket' not in session:
@@ -108,14 +108,13 @@ def position(position_id):
 
     if request.method == 'POST':
         num = int(request.form.get('quantity', 1))
-
-        basket[str(position.id)] = basket.get(str(position.id), 0) + num
+        basket[str(pos.id)] = basket.get(str(pos.id), 0) + num
         session['basket'] = basket
-
         return redirect(url_for('position', position_id=position_id))
 
-    return render_template("position.html", position=position)
-    
+    return render_template("position.html", position=pos)
+
+
 @app.route('/create_order', methods=['GET', 'POST'])
 @login_required
 def create_order():
@@ -135,6 +134,7 @@ def create_order():
         return redirect(url_for('my_orders'))
     return render_template('create_order.html', basket=basket)
 
+
 @app.route('/add_to_basket/<int:id>', methods=['POST'])
 def add_to_basket(id):
     num = int(request.form.get('quantity', 1))
@@ -143,10 +143,7 @@ def add_to_basket(id):
         session['basket'] = {}
 
     basket = session['basket']
-
-
     basket[str(id)] = basket.get(str(id), 0) + num
-
     session['basket'] = basket
 
     return redirect(url_for('my_orders'))
@@ -155,7 +152,6 @@ def add_to_basket(id):
 @app.route('/my_orders')
 def my_orders():
     basket = session.get('basket', {})
-
     items = []
 
     with Session() as db_session:
@@ -209,6 +205,7 @@ def my_reservations():
         order_list = db_session.query(Orders).filter_by(user_id=current_user.id).all()
     return render_template('my_reservations.html', reservations=res_list, orders=order_list)
 
+
 @app.route('/delete_reservation/<int:id>', methods=['POST'])
 @login_required
 def delete_reservation(id):
@@ -220,14 +217,13 @@ def delete_reservation(id):
             flash("Reservation deleted successfully!")
     return redirect(url_for('my_reservations'))
 
+
 @app.route('/menu_check', methods=['GET', 'POST'])
 @login_required
 def menu_check():
-
-    if not current_user.is_authenticated or current_user.role != 'admin':
+    if current_user.role != 'admin':
         return redirect(url_for('home'))
 
-    import secrets
     if 'csrf_token' not in session:
         session['csrf_token'] = secrets.token_hex(16)
 
@@ -242,13 +238,12 @@ def menu_check():
         position_id = int(position_id)
 
         with Session() as db_session:
-            position = db_session.query(Menu).filter_by(id=position_id).first()
-
-            if position:
+            pos = db_session.query(Menu).filter_by(id=position_id).first()
+            if pos:
                 if 'change_status' in request.form:
-                    position.active = not position.active
+                    pos.active = not pos.active
                 elif 'delete_position' in request.form:
-                    db_session.delete(position)
+                    db_session.delete(pos)
 
                 db_session.commit()
 
@@ -259,10 +254,11 @@ def menu_check():
                            all_positions=all_positions,
                            csrf_token=session["csrf_token"])
 
+
 @app.route('/all_users')
 @login_required
 def all_users():
-    if not current_user.is_authenticated or current_user.role != 'admin':
+    if current_user.role != 'admin':
         return redirect(url_for('home'))
 
     with Session() as db_session:
@@ -270,10 +266,11 @@ def all_users():
 
     return render_template('all_users.html', all_users=all_users_list)
 
+
 @app.route('/admin')
 @login_required
 def admin():
-    if not current_user.is_authenticated or current_user.role != 'admin':
+    if current_user.role != 'admin':
         return redirect(url_for('home'))
 
     return render_template('admin.html')
@@ -287,7 +284,6 @@ def page_not_found(e):
 @app.route('/<path:filename>.html')
 def remove_html(filename):
     return redirect(f'/{filename}')
-
 
 
 if __name__ == '__main__':
