@@ -109,7 +109,7 @@
             </div>
 
             <!-- Item: Crispy Fries -->
-            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=2) }}">
+            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=9) }}">
                 <div class="menu-img">
                     <img src="{{ url_for('static', filename='image/fries.jpg') }}" alt="Crispy Fries">
                 </div>
@@ -119,7 +119,7 @@
                         spice blend.</p>
                     <div class="menu-price">$4.99</div>
 
-                    <form method="POST" action="{{ url_for('position', position_id=2) }}" class="add-to-cart-form">
+                    <form method="POST" action="{{ url_for('position', position_id=9) }}" class="add-to-cart-form">
                         <input type="number" name="quantity" value="1" min="1" max="10"
                             class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
@@ -128,7 +128,7 @@
             </div>
 
             <!-- Item: Vintage Milkshake -->
-            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=4) }}">
+            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=10) }}">
                 <div class="menu-img">
                     <img src="{{ url_for('static', filename='image/milkshake.jpg') }}" alt="Vintage Milkshake">
                 </div>
@@ -138,7 +138,7 @@
                         cream and a cherry.</p>
                     <div class="menu-price">$6.50</div>
 
-                    <form method="POST" action="{{ url_for('position', position_id=4) }}" class="add-to-cart-form">
+                    <form method="POST" action="{{ url_for('position', position_id=10) }}" class="add-to-cart-form">
                         <input type="number" name="quantity" value="1" min="1" max="10"
                             class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
@@ -147,7 +147,7 @@
             </div>
 
             <!-- Item: Chicken Wrap -->
-            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=2) }}">
+            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=8) }}">
                 <div class="menu-img">
                     <img src="{{ url_for('static', filename='image/wrap.jpg') }}" alt="Chicken Wrap">
                 </div>
@@ -157,7 +157,7 @@
                         yogurt sauce.</p>
                     <div class="menu-price">$11.50</div>
 
-                    <form method="POST" action="{{ url_for('position', position_id=2) }}" class="add-to-cart-form">
+                    <form method="POST" action="{{ url_for('position', position_id=8) }}" class="add-to-cart-form">
                         <input type="number" name="quantity" value="1" min="1" max="10"
                             class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
@@ -166,7 +166,7 @@
             </div>
 
             <!-- Item: Old School Pizza -->
-            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=5) }}">
+            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=11) }}">
                 <div class="menu-img">
                     <img src="{{ url_for('static', filename='image/pizza.jpg') }}" alt="Classic Pizza">
                 </div>
@@ -176,7 +176,7 @@
                     </p>
                     <div class="menu-price">$14.99</div>
 
-                    <form method="POST" action="{{ url_for('position', position_id=5) }}" class="add-to-cart-form">
+                    <form method="POST" action="{{ url_for('position', position_id=11) }}" class="add-to-cart-form">
                         <input type="number" name="quantity" value="1" min="1" max="10"
                             class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
@@ -185,7 +185,7 @@
             </div>
 
             <!-- Item: Arcade Nachos -->
-            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=1) }}">
+            <div class="retro-card menu-link" data-url="{{ url_for('position', position_id=7) }}">
                 <div class="menu-img">
                     <img src="{{ url_for('static', filename='image/nachos.jpg') }}" alt="Arcade Nachos">
                 </div>
@@ -195,7 +195,7 @@
                         salsa.</p>
                     <div class="menu-price">$10.99</div>
 
-                    <form method="POST" action="{{ url_for('position', position_id=1) }}" class="add-to-cart-form">
+                    <form method="POST" action="{{ url_for('position', position_id=7) }}" class="add-to-cart-form">
                         <input type="number" name="quantity" value="1" min="1" max="10"
                             class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
@@ -224,8 +224,8 @@
     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/invoice.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 
 </html>
->

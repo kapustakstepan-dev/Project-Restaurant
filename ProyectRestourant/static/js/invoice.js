@@ -9,6 +9,7 @@ class InvoiceGenerator {
         const overlay = document.createElement('div');
         overlay.classList.add('invoice-overlay');
         overlay.id = 'invoice-modal';
+        overlay.style.display = 'none';
 
         overlay.innerHTML = `
             <div class="invoice-modal">
