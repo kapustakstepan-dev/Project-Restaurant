@@ -126,11 +126,11 @@
         <aside class="admin-sidebar">
             <a href="{{ url_for('home') }}" class="sidebar-logo">RETROBITE</a>
             <ul class="sidebar-nav">
-                <li><a href="?tab=menu" class="{{ 'active' if active_tab == 'menu' else '' }}">Menu CRUD</a></li>
-                <li><a href="?tab=orders" class="{{ 'active' if active_tab == 'orders' else '' }}">Global Orders</a></li>
-                <li><a href="?tab=reservations" class="{{ 'active' if active_tab == 'reservations' else '' }}">Reservations</a></li>
-                <li><a href="?tab=users" class="{{ 'active' if active_tab == 'users' else '' }}">Users</a></li>
-                <li style="margin-top: 4rem;"><a href="{{ url_for('home') }}" style="border: 2px solid #444;">&larr; Exit Admin</a></li>
+                <li><a href="?tab=menu" class="{{ 'active' if active_tab == 'menu' else '' }}" data-i18n="admin_menu_crud">Menu CRUD</a></li>
+                <li><a href="?tab=orders" class="{{ 'active' if active_tab == 'orders' else '' }}" data-i18n="admin_global_orders">Global Orders</a></li>
+                <li><a href="?tab=reservations" class="{{ 'active' if active_tab == 'reservations' else '' }}" data-i18n="admin_reservations">Reservations</a></li>
+                <li><a href="?tab=users" class="{{ 'active' if active_tab == 'users' else '' }}" data-i18n="admin_users">Users</a></li>
+                <li style="margin-top: 4rem;"><a href="{{ url_for('home') }}" style="border: 2px solid #444;" data-i18n="admin_exit">&larr; Exit Admin</a></li>
             </ul>
         </aside>
 
@@ -149,18 +149,18 @@
             {% if active_tab == 'menu' %}
             <div class="section-container">
                 <div class="section-header">
-                    <h2>Gestión del Menú</h2>
-                    <label for="add-modal" class="retro-btn" style="padding: 0.5rem 1rem; cursor: pointer;">+ Añadir Plato</label>
+                    <h2 data-i18n="admin_gest_menu">Gestión del Menú</h2>
+                    <label for="add-modal" class="retro-btn" style="padding: 0.5rem 1rem; cursor: pointer;" data-i18n="admin_add_plate">+ Añadir Plato</label>
                 </div>
                 <div class="admin-table-container">
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>IMG</th>
-                                <th>Nombre</th>
-                                <th>Precio</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
+                                <th data-i18n="admin_img">IMG</th>
+                                <th data-i18n="admin_name">Nombre</th>
+                                <th data-i18n="admin_price">Precio</th>
+                                <th data-i18n="admin_status">Estado</th>
+                                <th data-i18n="admin_actions">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -176,9 +176,9 @@
                                 </td>
                                 <td>
                                     <div style="display: flex; gap: 0.5rem;">
-                                        <label for="edit-modal-{{ item.id }}" class="retro-btn small-btn" style="cursor: pointer;">Edit</label>
-                                        <form action="{{ url_for('admin_menu_delete', id=item.id) }}" method="POST" onsubmit="return confirm('¿Eliminar plato?')">
-                                            <button type="submit" class="retro-btn small-btn" style="--primary-color: #ff7675; border-color: #d63031;">Delete</button>
+                                        <label for="edit-modal-{{ item.id }}" class="retro-btn small-btn" style="cursor: pointer;" data-i18n="admin_edit">Edit</label>
+                                        <form action="{{ url_for('admin_menu_delete', id=item.id) }}" method="POST" onsubmit="return confirm(window.translator.get('admin_delete') + '?')">
+                                            <button type="submit" class="retro-btn small-btn" style="--primary-color: #ff7675; border-color: #d63031;" data-i18n="admin_delete">Delete</button>
                                         </form>
                                     </div>
                                 </td>
@@ -204,11 +204,19 @@
                             <input type="number" step="0.01" name="price" required class="retro-input">
                         </div>
                         <div class="form-group">
-                            <label>Descripción</label>
+                            <label data-i18n="weight_label">Peso (Weight)</label>
+                            <input type="text" name="weight" placeholder="e.g. 300g" class="retro-input">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="ingredients_label">Ingredientes</label>
+                            <textarea name="ingredients" class="retro-input" placeholder="Lista de ingredientes..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="admin_desc">Descripción</label>
                             <textarea name="description" class="retro-input"></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Imagen (filename)</label>
+                            <label data-i18n="admin_img_file">Imagen (filename)</label>
                             <input type="text" name="file_name" value="burger.jpg" class="retro-input">
                         </div>
                         <div class="modal-footer" style="display: flex; gap: 1rem; margin-top: 2rem;">
@@ -230,12 +238,12 @@
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>Ref</th>
-                                <th>Cliente</th>
-                                <th>Total</th>
-                                <th>Estado</th>
-                                <th>Fecha</th>
-                                <th>Acción</th>
+                                <th data-i18n="admin_ref">Ref</th>
+                                <th data-i18n="admin_client">Cliente</th>
+                                <th data-i18n="admin_total">Total</th>
+                                <th data-i18n="admin_status">Estado</th>
+                                <th data-i18n="admin_date">Fecha</th>
+                                <th data-i18n="admin_action">Acción</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -274,12 +282,12 @@
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>Ref</th>
-                                <th>Usuario</th>
-                                <th>Fecha/Hora</th>
-                                <th>Mesa</th>
-                                <th>Status</th>
-                                <th>Acción</th>
+                                <th data-i18n="admin_ref">Ref</th>
+                                <th data-i18n="admin_user">Usuario</th>
+                                <th data-i18n="admin_date">Fecha/Hora</th>
+                                <th data-i18n="admin_table_type">Mesa</th>
+                                <th data-i18n="admin_status">Status</th>
+                                <th data-i18n="admin_action">Acción</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -317,11 +325,11 @@
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Nickname</th>
-                                <th>Email</th>
-                                <th>Rol</th>
-                                <th>Acción</th>
+                                <th data-i18n="admin_ref">ID</th>
+                                <th data-i18n="admin_nickname">Nickname</th>
+                                <th data-i18n="email_label">Email</th>
+                                <th data-i18n="admin_role">Rol</th>
+                                <th data-i18n="admin_action">Acción</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -366,11 +374,19 @@
                     <input type="number" step="0.01" name="price" value="{{ item.price }}" required class="retro-input">
                 </div>
                 <div class="form-group">
-                    <label>Descripción</label>
+                    <label data-i18n="weight_label">Peso (Weight)</label>
+                    <input type="text" name="weight" value="{{ item.weight or '' }}" class="retro-input">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="ingredients_label">Ingredientes</label>
+                    <textarea name="ingredients" class="retro-input">{{ item.ingredients or '' }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="admin_desc">Descripción</label>
                     <textarea name="description" class="retro-input">{{ item.description }}</textarea>
                 </div>
                 <div class="form-group">
-                    <label>Imagen (filename)</label>
+                    <label data-i18n="admin_img_file">Imagen (filename)</label>
                     <input type="text" name="file_name" value="{{ item.file_name }}" class="retro-input">
                 </div>
                 <div class="form-group">

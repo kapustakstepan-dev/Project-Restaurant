@@ -102,7 +102,7 @@
                 const currentNow = new Date();
                 
                 if (selectedDate < currentNow) {
-                    alert("Error: No puedes reservar una mesa para una fecha que ya pasó.");
+                    alert(window.translator.get("err_past_date"));
                     return;
                 }
 

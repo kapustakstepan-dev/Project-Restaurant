@@ -40,12 +40,12 @@ class Menu(Base):
     __tablename__ = 'menu'
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(100), nullable=False)
-    weight: Mapped[str] = mapped_column(String(100))
-    ingredients: Mapped[str] = mapped_column(Text)
-    description: Mapped[str] = mapped_column(Text)
-    price:Mapped[int] = mapped_column(Integer)
+    weight: Mapped[str] = mapped_column(String(100), nullable=True)
+    ingredients: Mapped[str] = mapped_column(Text, nullable=True)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    price: Mapped[float] = mapped_column(nullable=True)
     active: Mapped[bool] = mapped_column(Boolean, default=True)
-    file_name: Mapped[str] = mapped_column(String(200))
+    file_name: Mapped[str] = mapped_column(String(200), nullable=True)
 
 class Reservation(Base):
     __tablename__ = 'reservations'

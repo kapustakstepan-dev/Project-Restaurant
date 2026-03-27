@@ -51,7 +51,7 @@
                     </div>
                     
                     <form method="POST" action="{{ url_for('delete_reservation', id=res.id) }}" class="delete-outside"
-                        onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta reserva?');">
+                        onsubmit="return confirm(window.translator.get('confirm_delete_res'));">
                         <button type="submit" class="retro-btn btn-small delete-action" data-i18n="btn_delete">Eliminar</button>
                     </form>
                 </div>
@@ -79,20 +79,20 @@
                 {% for order in orders %}
                 <div class="retro-card order-summary-card">
                     <div class="order-summary-header">
-                        <p class="order-id"><strong>ID:</strong> #{{ order.id }}</p>
+                        <p class="order-id"><strong data-i18n="label_id">ID:</strong> #{{ order.id }}</p>
                         <span class="order-status-badge">{{ order.state | capitalize }}</span>
                     </div>
                     <div class="order-summary-details">
-                        <p><strong>Fecha:</strong> {{ order.order_time.strftime("%Y-%m-%d %H:%M") }}</p>
+                        <p><strong data-i18n="admin_date">Fecha:</strong> {{ order.order_time.strftime("%Y-%m-%d %H:%M") }}</p>
                     </div>
-                    <a href="{{ url_for('my_orders') }}" class="highlight-link">Ver detalles &rarr;</a>
+                    <a href="{{ url_for('my_orders') }}" class="highlight-link" data-i18n="view_details">Ver detalles &rarr;</a>
                 </div>
                 {% endfor %}
             </div>
             {% else %}
             <div class="empty-state">
                 <p data-i18n="no_recent_orders">No tienes pedidos recientes.</p>
-                <a href="{{ url_for('menu') }}" class="retro-btn">Ver Menú</a>
+                <a href="{{ url_for('menu') }}" class="retro-btn" data-i18n="nav_menu">Ver Menú</a>
             </div>
             {% endif %}
         </section>

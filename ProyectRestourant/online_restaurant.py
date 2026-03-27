@@ -307,8 +307,10 @@ def admin_menu_add():
         with Session() as db_session:
             new_item = Menu(
                 name=request.form['name'],
-                price=float(request.form['price']),
-                description=request.form['description'],
+                price=float(request.form.get('price', 0)),
+                description=request.form.get('description', ''),
+                weight=request.form.get('weight', '0g'),
+                ingredients=request.form.get('ingredients', 'N/A'),
                 file_name=request.form.get('file_name', 'burger.jpg'),
                 active=True
             )
@@ -329,8 +331,10 @@ def admin_menu_edit(id):
             item = db_session.query(Menu).get(id)
             if item:
                 item.name = request.form['name']
-                item.price = float(request.form['price'])
-                item.description = request.form['description']
+                item.price = float(request.form.get('price', 0))
+                item.description = request.form.get('description', '')
+                item.weight = request.form.get('weight', '0g')
+                item.ingredients = request.form.get('ingredients', 'N/A')
                 item.file_name = request.form.get('file_name', item.file_name)
                 item.active = 'active' in request.form
                 db_session.commit()

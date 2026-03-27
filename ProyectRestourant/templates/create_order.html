@@ -161,11 +161,11 @@
     <div id="receipt-overlay" class="confirm-overlay">
         <div class="receipt-modal animate-reveal">
             <div class="receipt-header">
-                <h2 style="font-family: var(--font-heading); color: var(--primary-color); margin-bottom: 0.5rem;">
+                <h2 style="font-family: var(--font-heading); color: var(--primary-color); margin-bottom: 0.5rem;" data-i18n="invoice_title">
                     RetroBite Receipt</h2>
                 <p>Est. 1985</p>
                 <p id="receipt-date"></p>
-                <p>Order #: <span id="display-order-id"></span></p>
+                <p><span data-i18n="receipt_order_id">Order #</span>: <span id="display-order-id"></span></p>
             </div>
 
             <div id="receipt-items" style="margin: 1rem 0;">
@@ -173,7 +173,7 @@
             </div>
 
             <div class="receipt-total" style="border-top: 2px dashed #999; padding-top: 1rem; font-weight: bold;">
-                <span>Total:</span>
+                <span data-i18n="receipt_total">Total:</span>
                 <span>$<span id="display-total"></span></span>
             </div>
 
