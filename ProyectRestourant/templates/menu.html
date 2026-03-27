@@ -68,6 +68,9 @@
             <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu" class="active-link">Menu</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
             <li><a href="{{ url_for('my_reservations') }}" data-i18n="nav_reserved">Reservation</a></li>
+            {% if current_user.role == 'admin' %}
+            <li><a href="{{ url_for('admin') }}" data-i18n="nav_admin">Admin</a></li>
+            {% endif %}
             {% if current_user.is_authenticated %}
             <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
             {% else %}
@@ -93,11 +96,13 @@
                 </div>
                 <div class="menu-item-info">
                     <h3 data-i18n="item_burger">Retro Burger</h3>
-                    <p class="menu-desc" data-i18n="desc_burger">Classic double patty with melted cheese, lettuce, and secret diner sauce.</p>
+                    <p class="menu-desc" data-i18n="desc_burger">Classic double patty with melted cheese, lettuce, and
+                        secret diner sauce.</p>
                     <div class="menu-price">$12.99</div>
-                    
+
                     <form method="POST" action="{{ url_for('position', position_id=6) }}" class="add-to-cart-form">
-                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input quantity-input">
+                        <input type="number" name="quantity" value="1" min="1" max="10"
+                            class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
                     </form>
                 </div>
@@ -110,11 +115,13 @@
                 </div>
                 <div class="menu-item-info">
                     <h3 data-i18n="item_fries">Classic Crispy Fries</h3>
-                    <p class="menu-desc" data-i18n="desc_fries">Crispy crinkle-cut fries seasoned with our special retro spice blend.</p>
+                    <p class="menu-desc" data-i18n="desc_fries">Crispy crinkle-cut fries seasoned with our special retro
+                        spice blend.</p>
                     <div class="menu-price">$4.99</div>
-                    
+
                     <form method="POST" action="{{ url_for('position', position_id=2) }}" class="add-to-cart-form">
-                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input quantity-input">
+                        <input type="number" name="quantity" value="1" min="1" max="10"
+                            class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
                     </form>
                 </div>
@@ -127,11 +134,13 @@
                 </div>
                 <div class="menu-item-info">
                     <h3 data-i18n="item_shake">Vintage Milkshake</h3>
-                    <p class="menu-desc" data-i18n="desc_milkshake">Thick vanilla strawberry shake topped with whipped cream and a cherry.</p>
+                    <p class="menu-desc" data-i18n="desc_milkshake">Thick vanilla strawberry shake topped with whipped
+                        cream and a cherry.</p>
                     <div class="menu-price">$6.50</div>
-                    
+
                     <form method="POST" action="{{ url_for('position', position_id=4) }}" class="add-to-cart-form">
-                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input quantity-input">
+                        <input type="number" name="quantity" value="1" min="1" max="10"
+                            class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
                     </form>
                 </div>
@@ -144,11 +153,13 @@
                 </div>
                 <div class="menu-item-info">
                     <h3 data-i18n="item_wrap">Chicken Wrap</h3>
-                    <p class="menu-desc" data-i18n="desc_wrap">Tender grilled chicken with fresh veggies and garlic yogurt sauce.</p>
+                    <p class="menu-desc" data-i18n="desc_wrap">Tender grilled chicken with fresh veggies and garlic
+                        yogurt sauce.</p>
                     <div class="menu-price">$11.50</div>
-                    
+
                     <form method="POST" action="{{ url_for('position', position_id=2) }}" class="add-to-cart-form">
-                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input quantity-input">
+                        <input type="number" name="quantity" value="1" min="1" max="10"
+                            class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
                     </form>
                 </div>
@@ -161,11 +172,13 @@
                 </div>
                 <div class="menu-item-info">
                     <h3 data-i18n="item_pizza">Old School Pizza</h3>
-                    <p class="menu-desc" data-i18n="desc_pizza">Cheesy pepperoni slice baked in our classic brick oven.</p>
+                    <p class="menu-desc" data-i18n="desc_pizza">Cheesy pepperoni slice baked in our classic brick oven.
+                    </p>
                     <div class="menu-price">$14.99</div>
-                    
+
                     <form method="POST" action="{{ url_for('position', position_id=5) }}" class="add-to-cart-form">
-                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input quantity-input">
+                        <input type="number" name="quantity" value="1" min="1" max="10"
+                            class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
                     </form>
                 </div>
@@ -178,11 +191,13 @@
                 </div>
                 <div class="menu-item-info">
                     <h3 data-i18n="item_nachos">Arcade Nachos</h3>
-                    <p class="menu-desc" data-i18n="desc_nachos">Loaded corn chips with jalapeños, melted cheese, and salsa.</p>
+                    <p class="menu-desc" data-i18n="desc_nachos">Loaded corn chips with jalapeños, melted cheese, and
+                        salsa.</p>
                     <div class="menu-price">$10.99</div>
-                    
+
                     <form method="POST" action="{{ url_for('position', position_id=1) }}" class="add-to-cart-form">
-                        <input type="number" name="quantity" value="1" min="1" max="10" class="retro-input quantity-input">
+                        <input type="number" name="quantity" value="1" min="1" max="10"
+                            class="retro-input quantity-input">
                         <button type="submit" class="retro-btn" data-i18n="add_to_cart">Add to Cart</button>
                     </form>
                 </div>
@@ -209,9 +224,7 @@
     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/invoice.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 
 </html>
->

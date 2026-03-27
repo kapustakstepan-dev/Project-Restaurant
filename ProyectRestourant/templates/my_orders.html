@@ -21,6 +21,9 @@
             <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu">Menu</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders" class="active-link">My Orders</a></li>
             <li><a href="{{ url_for('my_reservations') }}" data-i18n="nav_reserved">Reservation</a></li>
+            {% if current_user.role == 'admin' %}
+            <li><a href="{{ url_for('admin') }}" data-i18n="nav_admin">Admin</a></li>
+            {% endif %}
             {% if current_user.is_authenticated %}
             <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
             {% else %}
@@ -46,7 +49,7 @@
                 {% for entry in items %}
                 <div class="basket-item-card">
                     <div class="basket-item-info">
-                        <h3 class="item-name">{{ entry.item.name }}</h3>
+                        <h3 class="item-name" data-i18n="item_{{ entry.item.name | lower | replace(' ', '_') }}">{{ entry.item.name }}</h3>
                         <p class="item-quantity">
                             <span data-i18n="quantity_label">Quantity</span>: {{ entry.quantity }}
                         </p>
@@ -55,8 +58,8 @@
                 {% endfor %}
             </div>
             
-            <div class="basket-actions">
-                <a href="{{ url_for('create_order') }}" class="retro-btn" data-i18n="checkout_btn">
+            <div class="basket-actions" style="margin-top: 2rem; text-align: center;">
+                <a href="{{ url_for('create_order') }}" class="retro-btn cta-large" data-i18n="checkout_btn">
                     Place Order Now
                 </a>
             </div>
@@ -67,8 +70,6 @@
             </div>
             {% endif %}
         </section>
-
-        <!-- Note: Historical orders are shown in Reservations page as per current app logic -->
     </main>
 
     <!-- Scripts -->
@@ -79,4 +80,3 @@
 </body>
 
 </html>
-l>

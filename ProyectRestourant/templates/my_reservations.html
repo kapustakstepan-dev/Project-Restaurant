@@ -40,29 +40,31 @@
 
         <section class="reservations-section animate-reveal">
             {% if reservations %}
-            <div class="res-grid">
+            <div class="res-grid-modern">
                 {% for res in reservations %}
-                <div class="retro-card res-card">
-                    <div class="res-info">
-                        <p><strong>Fecha/Hora:</strong> {{ res.time_start.strftime("%Y-%m-%d %H:%M") }}</p>
-                        <p><strong>Mesa:</strong> {{ res.type_table | capitalize }}</p>
+                <div class="res-card-wrapper">
+                    <div class="res-card-large">
+                        <div class="res-info">
+                            <p><strong data-i18n="label_date">Fecha/Hora</strong>: {{ res.time_start.strftime("%Y-%m-%d %H:%M") }}</p>
+                            <p><strong data-i18n="label_table_type">Mesa</strong>: {{ res.type_table | capitalize }}</p>
+                        </div>
                     </div>
-
-                    <form method="POST" action="{{ url_for('delete_reservation', id=res.id) }}" class="delete-form"
+                    
+                    <form method="POST" action="{{ url_for('delete_reservation', id=res.id) }}" class="delete-outside"
                         onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta reserva?');">
-                        <button type="submit" class="retro-btn delete-btn">Eliminar</button>
+                        <button type="submit" class="retro-btn btn-small delete-action" data-i18n="btn_delete">Eliminar</button>
                     </form>
                 </div>
                 {% endfor %}
             </div>
 
             <div class="section-actions">
-                <a href="{{ url_for('reservation') }}" class="retro-btn">Reservar más mesas</a>
+                <a href="{{ url_for('reservation') }}" class="retro-btn cta-large" data-i18n="btn_reserve_more">Reservar más mesas</a>
             </div>
             {% else %}
             <div class="empty-state">
                 <p data-i18n="no_active_reservations">No tienes reservas activas.</p>
-                <a href="{{ url_for('reservation') }}" class="retro-btn">Ir a reservar</a>
+                <a href="{{ url_for('reservation') }}" class="retro-btn" data-i18n="go_to_reserve">Ir a reservar</a>
             </div>
             {% endif %}
         </section>

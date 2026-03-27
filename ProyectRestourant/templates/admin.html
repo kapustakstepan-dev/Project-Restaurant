@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - RetroBite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="admin-body">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="{{ url_for('home') }}" class="logo">RetroBite Admin</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('admin') }}" class="active-link" data-i18n="admin_title">Dashboard</a></li>
+            <li><a href="{{ url_for('home') }}" data-i18n="nav_home">Home</a></li>
+            <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
+        </ul>
+        <div class="lang-switcher">
+            <button class="lang-btn" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="es">ES</button>
+            <button class="lang-btn" data-lang="ua">UA</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h1 class="page-title" data-i18n="admin_title">Admin Dashboard</h1>
+
+        <!-- Menu Management Section -->
+        <section class="admin-section animate-reveal">
+            <div class="section-header">
+                <h2 data-i18n="admin_menu_mgmt">Menu Management</h2>
+                <button class="retro-btn btn-small" onclick="toggleModal('add-item-modal')" data-i18n="admin_add_item">+ Add Item</button>
+            </div>
+
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="pos_id">ID</th>
+                            <th data-i18n="pos_name">Name</th>
+                            <th data-i18n="pos_price">Price</th>
+                            <th data-i18n="pos_status">Status</th>
+                            <th data-i18n="pos_actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.id }}</td>
+                            <td class="item-name-cell">{{ item.name }}</td>
+                            <td>${{ item.price }}</td>
+                            <td>
+                                <span class="status-badge {{ 'status-active' if item.active else 'status-inactive' }}">
+                                    {{ 'Active' if item.active else 'Inactive' }}
+                                </span>
+                            </td>
+                            <td class="admin-actions">
+                                <button class="retro-btn btn-small edit-btn" 
+                                    data-id="{{ item.id }}" 
+                                    data-name="{{ item.name }}" 
+                                    data-price="{{ item.price }}" 
+                                    data-desc="{{ item.description }}"
+                                    data-active="{{ 'true' if item.active else 'false' }}">Edit</button>
+                                <form method="POST" action="{{ url_for('admin_delete_item', id=item.id) }}" style="display:inline;" onsubmit="return confirm('Delete this item?');">
+                                    <button type="submit" class="retro-btn btn-small delete-action">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Orders Section -->
+        <hr class="section-divider">
+        <section class="admin-section animate-reveal">
+            <h2 data-i18n="admin_orders">Global Orders</h2>
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>User ID</th>
+                            <th>Items</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>#{{ order.id }}</td>
+                            <td>{{ order.user_id }}</td>
+                            <td>{{ order.order_time.strftime("%Y-%m-%d %H:%M") if order.order_time else "N/A" }}</td>
+                            <td>
+                                {% if order.total_price is defined %}
+                                ${{ "%.2f"|format(order.total_price) }}
+                                {% else %}
+                                ${{ "%.2f"|format(0.0) }}
+                                {% endif %}
+                            </td>
+                            <td><span class="status-badge {{ order.state }}">{{ order.state | capitalize }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Reservations Section -->
+        <hr class="section-divider">
+        <section class="admin-section animate-reveal">
+            <h2 data-i18n="admin_reservations">All Reservations</h2>
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Ref</th>
+                            <th>User ID</th>
+                            <th>Date/Time</th>
+                            <th>Table Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for res in reservations %}
+                        <tr>
+                            <td>#{{ res.id }}</td>
+                            <td>{{ res.user_id }}</td>
+                            <td>{{ res.time_start.strftime("%Y-%m-%d %H:%M") }}</td>
+                            <td>{{ res.type_table | capitalize }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Users Section -->
+        <hr class="section-divider">
+        <section class="admin-section animate-reveal">
+            <h2 data-i18n="admin_users">User List</h2>
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nickname</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.nickname }}</td>
+                            <td>{{ user.email }}</td>
+                            <td><span class="user-role-badge {{ user.role }}">{{ user.role | capitalize }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Item Modal -->
+    <div id="add-item-modal" class="invoice-overlay">
+        <div class="invoice-modal retro-form" style="max-width: 500px;">
+            <h2 class="form-title" data-i18n="admin_add_item">Add New Item</h2>
+            <form action="{{ url_for('admin_add_item') }}" method="POST">
+                <div class="form-group">
+                    <label data-i18n="pos_name">Name</label>
+                    <input type="text" name="name" class="retro-input" required>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="pos_price">Price</label>
+                    <input type="number" step="0.01" name="price" class="retro-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" class="retro-input" style="min-height: 100px;" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Image Filename (e.g. burger.jpg)</label>
+                    <input type="text" name="image_url" class="retro-input" placeholder="burger.jpg">
+                </div>
+                <div class="invoice-actions" style="margin-top: 2rem;">
+                    <button type="button" class="retro-btn" onclick="toggleModal('add-item-modal')" data-i18n="close">Cancel</button>
+                    <button type="submit" class="retro-btn" style="--primary-color: var(--secondary-color); border-color: var(--secondary-color); box-shadow: 4px 4px 0px var(--secondary-color);">Add Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Item Modal -->
+    <div id="edit-item-modal" class="invoice-overlay">
+        <div class="invoice-modal retro-form" style="max-width: 500px;">
+            <h2 class="form-title" data-i18n="admin_edit_item">Edit Item</h2>
+            <form id="edit-form" method="POST">
+                <div class="form-group">
+                    <label data-i18n="pos_name">Name</label>
+                    <input type="text" name="name" id="edit-name" class="retro-input" required>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="pos_price">Price</label>
+                    <input type="number" step="0.01" name="price" id="edit-price" class="retro-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" id="edit-description" class="retro-input" style="min-height: 100px;" required></textarea>
+                </div>
+                <div class="form-group" style="display: flex; align-items: center; gap: 1rem;">
+                    <input type="checkbox" name="active" id="edit-active">
+                    <label for="edit-active" data-i18n="pos_active">Active</label>
+                </div>
+                <div class="invoice-actions" style="margin-top: 2rem;">
+                    <button type="button" class="retro-btn" onclick="toggleModal('edit-item-modal')" data-i18n="close">Cancel</button>
+                    <button type="submit" class="retro-btn" style="--primary-color: var(--secondary-color); border-color: var(--secondary-color); box-shadow: 4px 4px 0px var(--secondary-color);">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
+    <script>
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.toggle('active');
+        }
+
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const name = btn.dataset.name;
+                const price = btn.dataset.price;
+                const desc = btn.dataset.desc;
+                const active = btn.dataset.active === 'true';
+
+                const form = document.getElementById('edit-form');
+                form.action = `/admin/edit/${id}`;
+                document.getElementById('edit-name').value = name;
+                document.getElementById('edit-price').value = price;
+                document.getElementById('edit-description').value = desc;
+                document.getElementById('edit-active').checked = active;
+                toggleModal('edit-item-modal');
+            });
+        });
+    </script>
+</body>
+
+</html>

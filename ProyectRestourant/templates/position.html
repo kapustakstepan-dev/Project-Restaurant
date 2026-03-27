@@ -36,7 +36,7 @@
     </nav>
 
     <main class="container">
-        <a href="{{ url_for('menu') }}" class="retro-btn back-btn" data-i18n="back_to_menu">
+        <a href="{{ url_for('menu') }}" class="retro-btn back-btn" data-i18n="back_to_menu" style="margin-bottom: 2rem;">
             &larr; Back to Menu
         </a>
 
@@ -50,32 +50,27 @@
             </div>
 
             <div class="position-details">
-                <h1 class="position-title">{{ position.name }}</h1>
+                <h1 class="position-title" data-i18n="item_{{ position.name | lower | replace(' ', '_') }}">{{ position.name }}</h1>
 
                 <div class="position-info-block">
                     <p class="position-meta">
-                        <span data-i18n="weight_label">Weight</span>: {{ position.weight }}
+                        <!-- Weight is optional, but let's keep it for compatibility if needed -->
                     </p>
-                    <p class="position-price">${{ position.price }}</p>
+                    <p class="position-price">${{ "%.2f"|format(position.price) }}</p>
                 </div>
 
                 <div class="position-description">
                     <h3 data-i18n="description_label">Description:</h3>
-                    <p>{{ position.description }}</p>
+                    <p data-i18n="desc_{{ position.name | lower | replace(' ', '_') }}">{{ position.description }}</p>
                 </div>
 
-                <div class="position-ingredients">
-                    <h3 data-i18n="ingredients_label">Ingredients:</h3>
-                    <p>{{ position.ingredients }}</p>
-                </div>
-
-                <form action="{{ url_for('position', position_id=position.id) }}" method="POST" class="add-to-cart-standalone">
+                <form action="{{ url_for('position', position_id=position.id) }}" method="POST" class="add-to-cart-standalone" style="margin-top: 2rem;">
                     <div class="form-group inline-group">
                         <label for="quantity" data-i18n="label_quantity">Quantity:</label>
                         <input type="number" name="quantity" id="quantity" value="1" min="1" max="10" class="retro-input quantity-input">
                     </div>
                     
-                    <button type="submit" class="retro-btn full-width-btn" data-i18n="add_to_cart">
+                    <button type="submit" class="retro-btn cta-large" data-i18n="add_to_cart" style="width: 100%; margin-top: 1rem;">
                         Add to Cart
                     </button>
                 </form>

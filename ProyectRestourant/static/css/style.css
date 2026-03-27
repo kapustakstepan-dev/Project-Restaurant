@@ -380,6 +380,13 @@ body {
     background-color: #f0f2f5;
 }
 
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
 .admin-table-container {
     margin-top: 2rem;
     background: #fff;
@@ -417,7 +424,7 @@ body {
     color: var(--primary-color);
 }
 
-.role-badge, .status-badge {
+.status-badge {
     display: inline-block;
     padding: 0.3rem 0.8rem;
     border-radius: 20px;
@@ -454,41 +461,220 @@ body {
     box-shadow: 2px 2px 0px #ff4444 !important;
 }
 
-.delete-action:hover {
-    background-color: #ff4444 !important;
-    color: #fff !important;
+/* My Reservations Upgrade */
+.res-grid-modern {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 3rem;
+    margin-top: 3rem;
 }
 
-/* Invoice Modal */
-.invoice-overlay {
+.res-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.res-card-large {
+    padding: 2.5rem;
+    background: #fff;
+    border: 4px solid var(--text-color);
+    border-radius: 24px;
+    box-shadow: 10px 10px 0px var(--secondary-color);
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.res-card-large:hover {
+    transform: scale(1.02);
+}
+
+.res-card-large .res-info p {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+}
+
+.res-card-large .res-info strong {
+    color: var(--primary-color);
+}
+
+.delete-outside {
+    align-self: flex-end;
+    margin-right: 1.5rem;
+}
+
+.section-actions {
+    margin: 4rem 0;
+    text-align: center;
+}
+
+.cta-large {
+    padding: 1.2rem 3rem;
+    font-size: 1.5rem;
+    box-shadow: 8px 8px 0px var(--accent-color);
+    border-color: var(--accent-color);
+    color: var(--text-color);
+}
+
+.cta-large:hover {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 20px var(--accent-color);
+}
+
+/* Centered confirmation Message styles */
+.confirm-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.7);
+    background: rgba(245, 243, 238, 0.95);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 2000;
+    visibility: hidden;
     opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
+    transition: all 0.5s ease;
 }
 
-.invoice-overlay.active {
+/* Receipt and Confirm Overlay Styles */
+.confirm-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.confirm-overlay.active {
+    display: flex;
     opacity: 1;
-    pointer-events: auto;
 }
 
-.invoice-modal {
-    background: #fff;
-    padding: 2.5rem;
-    border: 4px solid var(--text-color);
-    border-radius: 20px;
-    width: 90%;
+.confirm-message-content {
+    background: var(--bg-color);
+    border: 3px solid var(--primary-color);
+    padding: 3rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 10px 10px 0px var(--primary-color);
     max-width: 500px;
-    box-shadow: 12px 12px 0px var(--primary-color);
+    width: 90%;
+}
+
+.confirm-text {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+}
+
+.receipt-modal {
+    background: #fdfdfd;
+    color: #1a1a1a;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 2.5rem;
+    max-width: 420px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    border-top: 12px solid #333;
+    border-bottom: 2px solid #ccc;
+}
+
+.receipt-header {
+    text-align: center;
+    border-bottom: 2px dashed #bbb;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+}
+
+.receipt-logo {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    letter-spacing: 2px;
+}
+
+.receipt-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.receipt-total {
+    border-top: 2px dashed #bbb;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 900;
+    font-size: 1.4rem;
+}
+
+.receipt-footer {
+    text-align: center;
+    margin-top: 3rem;
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+}
+
+.user-role-badge {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.user-role-badge.admin { background: var(--accent-color); color: white; }
+.user-role-badge.user, .user-role-badge.client { background: var(--secondary-color); color: white; }
+
+.confirm-overlay.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+.confirm-message-content {
+    text-align: center;
+    max-width: 600px;
+    padding: 3rem;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.confirm-overlay.active .confirm-message-content {
+    transform: translateY(0);
+}
+
+.confirm-text {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    text-shadow: 3px 3px 0px var(--accent-color);
+    margin-bottom: 2rem;
+    line-height: 1.2;
+}
+
+/* General Spacing Improvements */
+.container {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+.page-title {
+    margin-bottom: 4rem;
 }
 
 /* Responsive */
@@ -510,6 +696,10 @@ body {
     }
 
     .reservation-grid-form {
+        grid-template-columns: 1fr;
+    }
+
+    .res-grid-modern {
         grid-template-columns: 1fr;
     }
 }

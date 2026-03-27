@@ -4,6 +4,7 @@ from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from sqlalchemy.exc import IntegrityError
+from flask_mail import Mail, Message
 
 from back.BD.online_restaurant_db import Session, Users, Menu, Reservation, Orders, init_db
 
@@ -13,6 +14,16 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'secret-key')
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+# Flask-Mail Configuration
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER', 'RetroBite <noreply@retrobite.com>')
+
+mail = Mail(app)
 
 
 @login_manager.user_loader
@@ -119,20 +130,76 @@ def position(position_id):
 @login_required
 def create_order():
     basket = session.get('basket', {})
-    if request.method == 'POST' and basket:
-        with Session() as db_session:
-            order = Orders(
-                order_list=basket,
-                order_time=datetime.now(),
-                state='preparing',
-                user_id=current_user.id
-            )
-            db_session.add(order)
-            db_session.commit()
-        session.pop('basket', None)
-        flash("Order created successfully!")
-        return redirect(url_for('my_orders'))
-    return render_template('create_order.html', basket=basket)
+    if not basket:
+        return redirect(url_for('menu'))
+
+    with Session() as db_session:
+        basket_items = []
+        total_price = 0
+        for item_id, quantity in basket.items():
+            try:
+                item = db_session.query(Menu).get(int(item_id))
+                if item:
+                    basket_items.append({'item': item, 'quantity': quantity})
+                    total_price += item.price * quantity
+            except Exception as e:
+                print(f"Error fetching menu item {item_id}: {e}")
+
+        if request.method == 'POST':
+            # Create Order
+            try:
+                order = Orders(
+                    order_list=basket,
+                    total_price=total_price,
+                    user_id=current_user.id,
+                    state='confirmed',
+                    order_time=datetime.now()
+                )
+                db_session.add(order)
+                db_session.commit()
+                order_id = order.id
+            except Exception as e:
+                db_session.rollback()
+                print(f"Database error creating order: {e}")
+                # Fallback: create order without total_price if column missing
+                try:
+                    order = Orders(
+                        order_list=basket,
+                        user_id=current_user.id,
+                        state='confirmed',
+                        order_time=datetime.now()
+                    )
+                    db_session.add(order)
+                    db_session.commit()
+                    order_id = order.id
+                except Exception as e2:
+                    db_session.rollback()
+                    return {"success": False, "error": str(e2)}
+
+            action = request.form.get('action')
+            if action == 'send_email':
+                try:
+                    msg = Message(f"Your RetroBite Receipt #{order_id}",
+                                recipients=[current_user.email])
+                    msg.body = f"Order ID: #{order_id}\nTotal: ${total_price:.2f}\nItems: {basket}\nThank you for choosing RetroBite!"
+                    mail.send(msg)
+                    flash("Receipt sent to your email!")
+                except Exception as e:
+                    # Log but carry on - order is already saved
+                    print(f"Flask-Mail error (Order #{order_id} safe): {e}")
+
+            session.pop('basket', None)
+            
+            # Return JSON for AJAX modal
+            return {
+                "success": True,
+                "order_id": order_id,
+                "total": total_price,
+                "items": [{ "name": bi['item'].name, "qty": bi['quantity'], "price": bi['item'].price } for bi in basket_items],
+                "date": datetime.now().strftime("%Y-%m-%d %H:%M")
+            }
+
+    return render_template('create_order.html', basket=basket, total_price=total_price)
 
 
 @app.route('/add_to_basket/<int:id>', methods=['POST'])
@@ -218,54 +285,6 @@ def delete_reservation(id):
     return redirect(url_for('my_reservations'))
 
 
-@app.route('/menu_check', methods=['GET', 'POST'])
-@login_required
-def menu_check():
-    if current_user.role != 'admin':
-        return redirect(url_for('home'))
-
-    if 'csrf_token' not in session:
-        session['csrf_token'] = secrets.token_hex(16)
-
-    if request.method == 'POST':
-        if request.form.get("csrf_token") != session['csrf_token']:
-            return "Blocked", 403
-
-        position_id = request.form.get('pos_id')
-        if not position_id:
-            return "Bad request", 400
-
-        position_id = int(position_id)
-
-        with Session() as db_session:
-            pos = db_session.query(Menu).filter_by(id=position_id).first()
-            if pos:
-                if 'change_status' in request.form:
-                    pos.active = not pos.active
-                elif 'delete_position' in request.form:
-                    db_session.delete(pos)
-
-                db_session.commit()
-
-    with Session() as db_session:
-        all_positions = db_session.query(Menu).all()
-
-    return render_template('check_menu.html',
-                           all_positions=all_positions,
-                           csrf_token=session["csrf_token"])
-
-
-@app.route('/all_users')
-@login_required
-def all_users():
-    if current_user.role != 'admin':
-        return redirect(url_for('home'))
-
-    with Session() as db_session:
-        all_users_list = db_session.query(Users).all()
-
-    return render_template('all_users.html', all_users=all_users_list)
-
 
 @app.route('/admin')
 @login_required
@@ -273,7 +292,88 @@ def admin():
     if current_user.role != 'admin':
         return redirect(url_for('home'))
 
-    return render_template('admin.html')
+    with Session() as db_session:
+        items = db_session.query(Menu).all()
+        try:
+            orders = db_session.query(Orders).all()
+        except Exception as e:
+            print(f"Orders query failed (likely missing total_price): {e}")
+            db_session.rollback()
+            # If query fails, we might be hitting the missing column. 
+            # In a real app we'd fetch specific columns, but here we just try to recover.
+            orders = [] 
+        
+        reservations = db_session.query(Reservation).all()
+        users_list = db_session.query(Users).all()
+
+    return render_template('admin.html', items=items, orders=orders, reservations=reservations, users=users_list)
+
+
+@app.route('/admin/users')
+@login_required
+def all_users():
+    if current_user.role != 'admin':
+        return redirect(url_for('home'))
+
+    with Session() as db_session:
+        users_list = db_session.query(Users).all()
+
+    return render_template('admin.html', active_tab='users', users=users_list)
+
+
+@app.route('/admin/add', methods=['POST'])
+@login_required
+def admin_add_item():
+    if current_user.role != 'admin':
+        return redirect(url_for('home'))
+
+    name = request.form['name']
+    price = float(request.form['price'])
+    description = request.form['description']
+    image_url = request.form.get('image_url', 'burger.jpg')
+
+    with Session() as db_session:
+        new_item = Menu(name=name, price=price, description=description, image_url=image_url, active=True)
+        db_session.add(new_item)
+        db_session.commit()
+        flash("Item added successfully!")
+
+    return redirect(url_for('admin'))
+
+
+@app.route('/admin/edit/<int:id>', methods=['POST'])
+@login_required
+def admin_edit_item(id):
+    if current_user.role != 'admin':
+        return redirect(url_for('home'))
+
+    with Session() as db_session:
+        item = db_session.query(Menu).get(id)
+        if item:
+            item.name = request.form['name']
+            item.price = float(request.form['price'])
+            item.description = request.form['description']
+            item.active = 'active' in request.form
+            db_session.commit()
+            flash("Item updated successfully!")
+
+    return redirect(url_for('admin'))
+
+
+@app.route('/admin/delete/<int:id>', methods=['POST'])
+@login_required
+def admin_delete_item(id):
+    if current_user.role != 'admin':
+        return redirect(url_for('home'))
+
+    with Session() as db_session:
+        item = db_session.query(Menu).get(id)
+        if item:
+            db_session.delete(item)
+            db_session.commit()
+            flash("Item deleted successfully!")
+
+    return redirect(url_for('admin'))
 
 
 @app.errorhandler(404)

@@ -61,6 +61,7 @@ class Orders(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     order_list: Mapped[Dict] = mapped_column(JSONB, default=dict)
     order_time: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    total_price: Mapped[float] = mapped_column(default=0.0)
     state: Mapped[str] = mapped_column(String(50), default='pending')
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
 

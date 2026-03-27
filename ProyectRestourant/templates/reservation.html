@@ -21,6 +21,9 @@
             <li><a href="{{ url_for('menu') }}" data-i18n="nav_menu">Menu</a></li>
             <li><a href="{{ url_for('my_orders') }}" data-i18n="nav_orders">My Orders</a></li>
             <li><a href="{{ url_for('my_reservations') }}" data-i18n="nav_reserved" class="active-link">Reservation</a></li>
+            {% if current_user.role == 'admin' %}
+            <li><a href="{{ url_for('admin') }}" data-i18n="nav_admin">Admin</a></li>
+            {% endif %}
             {% if current_user.is_authenticated %}
             <li><a href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a></li>
             {% else %}
@@ -38,33 +41,42 @@
     <main class="container">
         <div class="reservation-content animate-reveal">
             <h1 class="page-title" data-i18n="res_title">Book a Table</h1>
-            <p class="section-subtitle" data-i18n="res_subtitle">
+            <p class="section-subtitle" data-i18n="res_subtitle" style="text-align: center; margin-bottom: 2rem;">
                 Experience nostalgic dining at its best. Secure your spot today!
             </p>
 
-            <form id="res-form" method="POST" action="{{ url_for('reservation') }}" class="retro-form reservation-grid-form">
-                <div class="form-group full-width">
+            <form id="res-form" method="POST" action="{{ url_for('reservation') }}" class="retro-form">
+                <div class="form-group">
                     <label for="datetime" data-i18n="label_date">Date & Time</label>
                     <input type="datetime-local" id="datetime" name="datetime" class="retro-input" required>
                 </div>
 
-                <div class="form-group full-width">
-                    <label for="table_type" data-i18n="label_guests">Table Type / Guests</label>
+                <div class="form-group">
+                    <label for="table_type" data-i18n="label_table_type">Table Type</label>
                     <select id="table_type" name="table_type" class="retro-input" required>
-                        <option value="2-persons" data-i18n="option_2">2 Persons - Romantic Booth</option>
-                        <option value="4-persons" data-i18n="option_4">4 Persons - Family Table</option>
-                        <option value="6-persons" data-i18n="option_6">6+ Persons - Party Lounge</option>
+                        <option value="regular" data-i18n="table_regular">Regular Table</option>
+                        <option value="booth" data-i18n="table_booth">Cozy Booth</option>
+                        <option value="window" data-i18n="table_window">Window Seat</option>
+                        <option value="outdoor" data-i18n="table_outdoor">Outdoor Terrace</option>
                     </select>
                 </div>
 
-                <div class="form-actions full-width">
-                    <button type="submit" class="retro-btn submit-btn" data-i18n="btn_reserve">
+                <div style="margin-top: 2rem; text-align: center;">
+                    <button type="submit" class="retro-btn cta-large" data-i18n="btn_reserve" style="width: 100%;">
                         Confirm Reservation
                     </button>
                 </div>
             </form>
         </div>
     </main>
+
+    <!-- Centered Confirmation Message -->
+    <div id="reservation-confirm-overlay" class="confirm-overlay">
+        <div class="confirm-message-content">
+            <h2 class="confirm-text" data-i18n="reservation_msg">Experience nostalgic dining at its best. Secure your spot today!</h2>
+            <div class="loader-retro"></div>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
@@ -75,28 +87,35 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const datetimeInput = document.getElementById('datetime');
+            const resForm = document.getElementById('res-form');
+            const overlay = document.getElementById('reservation-confirm-overlay');
 
-            function updateMinDate() {
-                const now = new Date();
-                const offset = now.getTimezoneOffset() * 60000;
-                const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
-                datetimeInput.min = localISOTime;
-            }
+            // Set min date to now
+            const now = new Date();
+            const offset = now.getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
+            datetimeInput.min = localISOTime;
 
-            updateMinDate();
-
-            document.getElementById('res-form').addEventListener('submit', function (e) {
+            resForm.addEventListener('submit', function (e) {
+                e.preventDefault();
                 const selectedDate = new Date(datetimeInput.value);
                 const currentNow = new Date();
+                
                 if (selectedDate < currentNow) {
-                    e.preventDefault();
                     alert("Error: No puedes reservar una mesa para una fecha que ya pasó.");
+                    return;
                 }
+
+                // Show centered confirmation message
+                overlay.classList.add('active');
+                
+                // Submit after a short delay for the animation
+                setTimeout(() => {
+                    resForm.submit();
+                }, 2500);
             });
         });
     </script>
 </body>
-
-</html>
 
 </html>
