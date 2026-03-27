@@ -40,9 +40,13 @@ def home():
 
 @app.route('/menu')
 def menu():
-    with Session() as db_session:
-        all_positions = db_session.query(Menu).filter_by(active=True).all()
-    return render_template('menu.html', all_positions=all_positions)
+    try:
+        with Session() as db_session:
+            all_positions = db_session.query(Menu).filter_by(active=True).all()
+        return render_template('menu.html', items=all_positions)
+    except Exception as e:
+        print(f"Error loading menu: {e}")
+        return render_template('menu.html', items=[])
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -292,88 +296,138 @@ def admin():
     if current_user.role != 'admin':
         return redirect(url_for('home'))
 
+    tab = request.args.get('tab', 'menu')
+    
+    items, orders, reservations, users_list = [], [], [], []
+    
     with Session() as db_session:
-        items = db_session.query(Menu).all()
         try:
-            orders = db_session.query(Orders).all()
+            items = db_session.query(Menu).order_by(Menu.id.desc()).all()
+            orders = db_session.query(Orders).order_by(Orders.order_time.desc()).all()
+            reservations = db_session.query(Reservation).order_by(Reservation.time_start.desc()).all()
+            users_list = db_session.query(Users).order_by(Users.id.asc()).all()
         except Exception as e:
-            print(f"Orders query failed (likely missing total_price): {e}")
+            print(f"Admin Dashboard Query Error: {e}")
             db_session.rollback()
-            # If query fails, we might be hitting the missing column. 
-            # In a real app we'd fetch specific columns, but here we just try to recover.
-            orders = [] 
-        
-        reservations = db_session.query(Reservation).all()
-        users_list = db_session.query(Users).all()
 
-    return render_template('admin.html', items=items, orders=orders, reservations=reservations, users=users_list)
+    return render_template('admin.html', 
+                           items=items, 
+                           orders=orders, 
+                           reservations=reservations, 
+                           users=users_list, 
+                           active_tab=tab)
 
-
-@app.route('/admin/users')
+# --- MENU CRUD ---
+@app.route('/admin/menu/add', methods=['POST'])
 @login_required
-def all_users():
-    if current_user.role != 'admin':
-        return redirect(url_for('home'))
-
-    with Session() as db_session:
-        users_list = db_session.query(Users).all()
-
-    return render_template('admin.html', active_tab='users', users=users_list)
-
-
-@app.route('/admin/add', methods=['POST'])
-@login_required
-def admin_add_item():
-    if current_user.role != 'admin':
-        return redirect(url_for('home'))
-
-    name = request.form['name']
-    price = float(request.form['price'])
-    description = request.form['description']
-    image_url = request.form.get('image_url', 'burger.jpg')
-
-    with Session() as db_session:
-        new_item = Menu(name=name, price=price, description=description, image_url=image_url, active=True)
-        db_session.add(new_item)
-        db_session.commit()
-        flash("Item added successfully!")
-
-    return redirect(url_for('admin'))
-
-
-@app.route('/admin/edit/<int:id>', methods=['POST'])
-@login_required
-def admin_edit_item(id):
-    if current_user.role != 'admin':
-        return redirect(url_for('home'))
-
-    with Session() as db_session:
-        item = db_session.query(Menu).get(id)
-        if item:
-            item.name = request.form['name']
-            item.price = float(request.form['price'])
-            item.description = request.form['description']
-            item.active = 'active' in request.form
+def admin_menu_add():
+    if current_user.role != 'admin': return redirect(url_for('home'))
+    
+    try:
+        with Session() as db_session:
+            new_item = Menu(
+                name=request.form['name'],
+                price=float(request.form['price']),
+                description=request.form['description'],
+                file_name=request.form.get('file_name', 'burger.jpg'),
+                active=True
+            )
+            db_session.add(new_item)
             db_session.commit()
-            flash("Item updated successfully!")
+            flash("Plato añadido con éxito")
+    except Exception as e:
+        flash(f"Error al añadir plato: {e}")
+    return redirect(url_for('admin', tab='menu'))
 
-    return redirect(url_for('admin'))
-
-
-@app.route('/admin/delete/<int:id>', methods=['POST'])
+@app.route('/admin/menu/edit/<int:id>', methods=['POST'])
 @login_required
-def admin_delete_item(id):
-    if current_user.role != 'admin':
-        return redirect(url_for('home'))
+def admin_menu_edit(id):
+    if current_user.role != 'admin': return redirect(url_for('home'))
+    
+    try:
+        with Session() as db_session:
+            item = db_session.query(Menu).get(id)
+            if item:
+                item.name = request.form['name']
+                item.price = float(request.form['price'])
+                item.description = request.form['description']
+                item.file_name = request.form.get('file_name', item.file_name)
+                item.active = 'active' in request.form
+                db_session.commit()
+                flash("Plato actualizado")
+    except Exception as e:
+        flash(f"Error al editar: {e}")
+    return redirect(url_for('admin', tab='menu'))
 
-    with Session() as db_session:
-        item = db_session.query(Menu).get(id)
-        if item:
-            db_session.delete(item)
-            db_session.commit()
-            flash("Item deleted successfully!")
+@app.route('/admin/menu/delete/<int:id>', methods=['POST'])
+@login_required
+def admin_menu_delete(id):
+    if current_user.role != 'admin': return redirect(url_for('home'))
+    
+    try:
+        with Session() as db_session:
+            item = db_session.query(Menu).get(id)
+            if item:
+                db_session.delete(item)
+                db_session.commit()
+                flash("Plato eliminado")
+    except Exception as e:
+        flash(f"Error al eliminar: {e}")
+    return redirect(url_for('admin', tab='menu'))
 
-    return redirect(url_for('admin'))
+# --- ORDER STATUS ---
+@app.route('/admin/order/status/<int:id>', methods=['POST'])
+@login_required
+def admin_order_status(id):
+    if current_user.role != 'admin': return redirect(url_for('home'))
+    
+    try:
+        new_status = request.form['status']
+        with Session() as db_session:
+            order = db_session.query(Orders).get(id)
+            if order:
+                order.state = new_status
+                db_session.commit()
+                flash(f"Pedido #{id} actualizado a {new_status}")
+    except Exception as e:
+        flash(f"Error: {e}")
+    return redirect(url_for('admin', tab='orders'))
+
+# --- RESERVATION STATUS ---
+@app.route('/admin/res/status/<int:id>', methods=['POST'])
+@login_required
+def admin_res_status(id):
+    if current_user.role != 'admin': return redirect(url_for('home'))
+    
+    try:
+        new_status = request.form['status']
+        with Session() as db_session:
+            res = db_session.query(Reservation).get(id)
+            if res:
+                res.status = new_status
+                db_session.commit()
+                flash(f"Reserva #{id} actualizada")
+    except Exception as e:
+        flash(f"Error: {e}")
+    return redirect(url_for('admin', tab='reservations'))
+
+# --- USER ROLE ---
+@app.route('/admin/user/role/<int:id>', methods=['POST'])
+@login_required
+def admin_user_role(id):
+    if current_user.role != 'admin': return redirect(url_for('home'))
+    
+    try:
+        new_role = request.form['role']
+        with Session() as db_session:
+            user = db_session.query(Users).get(id)
+            if user:
+                user.role = new_role
+                db_session.commit()
+                flash(f"Rol de {user.nickname} cambiado a {new_role}")
+    except Exception as e:
+        flash(f"Error: {e}")
+    return redirect(url_for('admin', tab='users'))
 
 
 @app.errorhandler(404)

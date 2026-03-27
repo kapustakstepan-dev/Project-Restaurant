@@ -76,4 +76,4 @@ with Session(engine) as session:
     
     session.commit()
 
-print("Меню успішно додано!")
+print("Menu added successfully")
